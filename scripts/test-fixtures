@@ -1,0 +1,15 @@
+#!/usr/bin/env node
+
+const shella = require('shella');
+
+(async () => {
+  const { stdout: lsStdout } = await shella({
+    stdio: 'pipe',
+  })`ls -d1 fixtures/src/*`;
+  const fixtures = lsStdout.split('\n');
+
+  for (const fixture of fixtures) {
+    console.info(`Type checking for ${fixture}`);
+    await shella`tsc --noEmit --project ${fixture}`;
+  }
+})();

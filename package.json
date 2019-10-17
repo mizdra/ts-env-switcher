@@ -9,12 +9,16 @@
   "private": true,
   "scripts": {
     "start": "ts-node --files --transpile-only src/index.ts",
-    "check": "prettier -l 'src/**/*.{ts,tsx}'"
+    "check": "prettier -l 'src/**/*.{ts,tsx}'",
+    "test:fixtures": "scripts/test-fixtures"
   },
   "devDependencies": {
     "@types/node": "^11.13.8",
     "prettier": "1.17.0",
     "ts-node": "^8.1.0",
     "typescript": "^3.4.5"
+  },
+  "dependencies": {
+    "shella": "^1.0.1"
   }
 }
