@@ -49,3 +49,7 @@ ts.sys.writeFile(
   join(fixtureDistPath, relative(fixtureSrcPath, sourceFile.fileName)),
   code,
 );
+ts.sys.writeFile(
+  join(fixtureDistPath, relative(fixtureSrcPath, configFileName)),
+  JSON.stringify(compilerOptions.raw, null, 2),
+);
