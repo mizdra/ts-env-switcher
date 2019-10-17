@@ -10,7 +10,7 @@
     // "jsx": "react",
 
     /* Module Options */
-    "module": "es2015",
+    "module": "commonjs",
     "moduleResolution": "node",
     "esModuleInterop": true,
 
@@ -18,8 +18,8 @@
     "strict": true,
 
     /* Helper Options */
-    "noEmitHelpers": true,
-    "importHelpers": true,
+    // "noEmitHelpers": true,
+    // "importHelpers": true,
 
     /* Debug Options */
     "sourceMap": true,
