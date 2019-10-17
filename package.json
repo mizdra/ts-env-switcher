@@ -8,7 +8,7 @@
   "license": "MIT",
   "private": true,
   "scripts": {
-    "start": "ts-node src/index.ts",
+    "start": "ts-node --files --transpile-only src/index.ts",
     "check": "prettier -l 'src/**/*.{ts,tsx}'"
   },
   "devDependencies": {

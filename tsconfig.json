@@ -5,7 +5,7 @@
     /* Basic Options */
     // "outDir": "./dist",
     "target": "esnext",
-    "lib": ["esnext"],
+    "lib": ["es2020"],
     "declaration": false,
     // "jsx": "react",
 
