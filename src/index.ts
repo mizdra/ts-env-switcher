@@ -25,6 +25,6 @@ function checkEnv(option: Option) {
 }
 
 checkEnv({
-  srcBasePath: 'fixtures/src/2-include-index.ts',
-  distPath: 'fixtures/dist/2-include-index.ts',
+  srcBasePath: 'fixtures/src/3-include-multiple',
+  distPath: 'fixtures/dist/3-include-multiple',
 });
