@@ -1,6 +1,6 @@
 import ts from 'typescript';
 import { read } from './read';
-import { parse } from './parse';
+import { transform } from './transform';
 import { write } from './write';
 
 const fixtureSrcPath = 'fixtures/src/2-include-index.ts';
@@ -14,18 +14,11 @@ const configFileName = ts.findConfigFile(
 if (!configFileName) throw new Error('tsconfig.json が見つかりません');
 
 // read phase
-const { compilerOptions } = read(configFileName, fixtureSrcPath);
-console.log('compilerOptions =', compilerOptions);
+const srcProject = read(fixtureSrcPath, configFileName);
+console.log(srcProject.sourceFiles.map((sourceFile) => sourceFile.fileName));
 
-// parse phase
-const { program, sourceFiles } = parse(compilerOptions);
-console.log(sourceFiles.map((sourceFile) => sourceFile.fileName));
+// transform phase
+const distProject = transform(srcProject, fixtureDistPath);
 
 // write phase
-write(
-  sourceFiles,
-  compilerOptions,
-  configFileName,
-  fixtureSrcPath,
-  fixtureDistPath,
-);
+write(distProject);

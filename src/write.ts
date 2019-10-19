@@ -1,25 +1,18 @@
 import ts from 'typescript';
-import { join, relative } from 'path';
+import { Project } from './type';
 
-export function write(
-  sourceFiles: readonly ts.SourceFile[],
-  compilerOptions: ts.ParsedCommandLine,
-  srcConfigFileName: string,
-  srcBasePath: string,
-  distBasePath: string,
-) {
+export function write({ configFile, sourceFiles }: Project) {
   const printer = ts.createPrinter();
 
+  // configFile
+  ts.sys.writeFile(
+    configFile.name,
+    JSON.stringify(configFile.parsedCommandLine.raw, null, 2),
+  );
+
+  // sourceFiles
   sourceFiles.forEach((sourceFile) => {
     const code = printer.printFile(sourceFile);
-
-    ts.sys.writeFile(
-      join(distBasePath, relative(srcBasePath, sourceFile.fileName)),
-      code,
-    );
-    ts.sys.writeFile(
-      join(distBasePath, relative(srcBasePath, srcConfigFileName)),
-      JSON.stringify(compilerOptions.raw, null, 2),
-    );
+    ts.sys.writeFile(sourceFile.fileName, code);
   });
 }
