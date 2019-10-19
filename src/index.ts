@@ -1,5 +1,7 @@
 import ts from 'typescript';
-import { join, relative } from 'path';
+import { read } from './read';
+import { parse } from './parse';
+import { write } from './write';
 
 const fixtureSrcPath = 'fixtures/src/2-include-index.ts';
 const fixtureDistPath = 'fixtures/dist/2-include-index.ts';
@@ -9,47 +11,21 @@ const configFileName = ts.findConfigFile(
   ts.sys.fileExists,
   'tsconfig.json',
 );
-
 if (!configFileName) throw new Error('tsconfig.json が見つかりません');
 
-const configFile = ts.readConfigFile(configFileName, ts.sys.readFile);
-
-const parseConfigHost: ts.ParseConfigHost = {
-  fileExists: ts.sys.fileExists,
-  readFile: ts.sys.readFile,
-  readDirectory: ts.sys.readDirectory,
-  useCaseSensitiveFileNames: true,
-};
-const compilerOptions = ts.parseJsonConfigFileContent(
-  configFile.config,
-  parseConfigHost,
-  fixtureSrcPath,
-);
-
-console.log('configFileName =', configFileName);
-console.log('configFile =', configFile);
+// read phase
+const { compilerOptions } = read(configFileName, fixtureSrcPath);
 console.log('compilerOptions =', compilerOptions);
 
-const program = ts.createProgram(
-  compilerOptions.fileNames,
-  compilerOptions.options,
-);
+// parse phase
+const { program, sourceFiles } = parse(compilerOptions);
+console.log(sourceFiles.map((sourceFile) => sourceFile.fileName));
 
-const sourceFile = program.getSourceFile(
-  'fixtures/src/2-include-index.ts/index.ts',
-);
-if (!sourceFile) throw new Error('sourceFile が見つかりません');
-
-const printer = ts.createPrinter();
-
-const code = printer.printFile(sourceFile);
-console.log(sourceFile.fileName);
-
-ts.sys.writeFile(
-  join(fixtureDistPath, relative(fixtureSrcPath, sourceFile.fileName)),
-  code,
-);
-ts.sys.writeFile(
-  join(fixtureDistPath, relative(fixtureSrcPath, configFileName)),
-  JSON.stringify(compilerOptions.raw, null, 2),
+// write phase
+write(
+  sourceFiles,
+  compilerOptions,
+  configFileName,
+  fixtureSrcPath,
+  fixtureDistPath,
 );
