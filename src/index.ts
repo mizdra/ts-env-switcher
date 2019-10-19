@@ -1,14 +1,14 @@
 import { read } from './read';
 import { transform } from './transform';
 import { write } from './write';
-import { join } from 'path';
+import { resolve } from 'path';
 
 type Option = {
   srcBasePath: string;
   distPath?: string;
 };
 function checkEnv(option: Option) {
-  const configFileName = join(option.srcBasePath, 'tsconfig.json');
+  const configFileName = resolve(option.srcBasePath, 'tsconfig.json');
 
   // read phase
   const srcProject = read(option.srcBasePath, configFileName);
@@ -25,6 +25,6 @@ function checkEnv(option: Option) {
 }
 
 checkEnv({
-  srcBasePath: 'fixtures/src/3-include-multiple',
-  distPath: 'fixtures/dist/3-include-multiple',
+  srcBasePath: resolve('fixtures/src/3-include-multiple'),
+  distPath: resolve('fixtures/dist/3-include-multiple'),
 });

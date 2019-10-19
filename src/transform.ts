@@ -1,13 +1,13 @@
 import ts from 'typescript';
 import { Project } from './type';
-import { join, relative } from 'path';
+import { resolve, relative } from 'path';
 
 function transformPath(
   srcBasePath: string,
   distBasePath: string,
   srcPath: string,
 ) {
-  return join(distBasePath, relative(srcBasePath, srcPath));
+  return resolve(distBasePath, relative(srcBasePath, srcPath));
 }
 
 export function transform(

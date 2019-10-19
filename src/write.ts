@@ -1,7 +1,12 @@
 import ts from 'typescript';
 import { Project } from './type';
+import { relative } from 'path';
 
-export function write({ configFile, sourceFiles }: Project) {
+function isSubDirectory(parent: string, child: string) {
+  return !relative(parent, child).startsWith('..');
+}
+
+export function write({ basePath, configFile, sourceFiles }: Project) {
   const printer = ts.createPrinter();
 
   // configFile
@@ -13,6 +18,9 @@ export function write({ configFile, sourceFiles }: Project) {
   // sourceFiles
   sourceFiles.forEach((sourceFile) => {
     const code = printer.printFile(sourceFile);
-    ts.sys.writeFile(sourceFile.fileName, code);
+    if (isSubDirectory(basePath, sourceFile.fileName))
+      ts.sys.writeFile(sourceFile.fileName, code);
+    else
+      console.warn(`warning: ${sourceFile.fileName} is not under ${basePath}.`);
   });
 }
