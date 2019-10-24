@@ -19,7 +19,7 @@ export function transform(
   distBasePath: string,
 ): Project {
   const distConfig = {
-    name: transformPath(srcBasePath, distBasePath, srcConfig.name),
+    fileName: transformPath(srcBasePath, distBasePath, srcConfig.fileName),
     parsedCommandLine: srcConfig.parsedCommandLine,
   };
   const distSourceFiles = srcSourceFiles.map((sourceFile) => ({

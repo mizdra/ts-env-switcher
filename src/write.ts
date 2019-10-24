@@ -11,7 +11,7 @@ export function write({ basePath, config, sourceFiles }: Project) {
 
   // configFile
   ts.sys.writeFile(
-    config.name,
+    config.fileName,
     JSON.stringify(config.parsedCommandLine.raw, null, 2),
   );
 

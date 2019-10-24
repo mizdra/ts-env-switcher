@@ -24,7 +24,7 @@ export function read(basePath: string, configFileName: string): Project {
   return {
     basePath,
     config: {
-      name: configFileName,
+      fileName: configFileName,
       parsedCommandLine,
     },
     sourceFiles,
