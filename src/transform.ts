@@ -13,14 +13,14 @@ function transformPath(
 export function transform(
   {
     basePath: srcBasePath,
-    configFile: srcConfigFile,
+    config: srcConfig,
     sourceFiles: srcSourceFiles,
   }: Project,
   distBasePath: string,
 ): Project {
-  const distConfigFile = {
-    name: transformPath(srcBasePath, distBasePath, srcConfigFile.name),
-    parsedCommandLine: srcConfigFile.parsedCommandLine,
+  const distConfig = {
+    name: transformPath(srcBasePath, distBasePath, srcConfig.name),
+    parsedCommandLine: srcConfig.parsedCommandLine,
   };
   const distSourceFiles = srcSourceFiles.map((sourceFile) => ({
     ...sourceFile,
@@ -29,7 +29,7 @@ export function transform(
 
   return {
     basePath: distBasePath,
-    configFile: distConfigFile,
+    config: distConfig,
     sourceFiles: distSourceFiles,
   };
 }

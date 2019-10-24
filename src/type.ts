@@ -2,7 +2,7 @@ import ts from 'typescript';
 
 export type Project = Readonly<{
   basePath: string;
-  configFile: {
+  config: {
     readonly name: string;
     readonly parsedCommandLine: ts.ParsedCommandLine;
   };

@@ -23,7 +23,7 @@ export function read(basePath: string, configFileName: string): Project {
 
   return {
     basePath,
-    configFile: {
+    config: {
       name: configFileName,
       parsedCommandLine,
     },
