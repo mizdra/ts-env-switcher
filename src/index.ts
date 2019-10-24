@@ -25,6 +25,6 @@ function checkEnv(option: Option) {
 }
 
 checkEnv({
-  srcBasePath: resolve('fixtures/src/3-include-multiple'),
-  distPath: resolve('fixtures/dist/3-include-multiple'),
+  srcBasePath: resolve('fixtures/src/4-multiple-module'),
+  distPath: resolve('fixtures/dist/4-multiple-module'),
 });
