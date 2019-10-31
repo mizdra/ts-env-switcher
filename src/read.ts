@@ -16,6 +16,8 @@ export function read(basePath: string, configFileName: string): Project {
     parseConfigHost,
     basePath,
   );
+
+  const packages: { readonly fileName: string; readonly raw: string }[] = [];
   const compilerHost = ts.createCompilerHost(parsedCommandLine.options);
   const program = ts.createProgram(
     parsedCommandLine.fileNames,
@@ -23,10 +25,13 @@ export function read(basePath: string, configFileName: string): Project {
     {
       ...compilerHost,
       readFile: (fileName: string) => {
+        const raw = compilerHost.readFile(fileName);
         if (basename(fileName) === 'package.json') {
-          console.log(fileName);
+          if (raw === undefined)
+            throw new Error(`${fileName} の読み取りに失敗しました`);
+          packages.push({ fileName, raw });
         }
-        return compilerHost.readFile(fileName);
+        return raw;
       },
     },
   );
@@ -38,6 +43,7 @@ export function read(basePath: string, configFileName: string): Project {
       fileName: configFileName,
       parsedCommandLine,
     },
+    packages,
     sourceFiles,
   };
 }

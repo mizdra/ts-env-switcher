@@ -6,7 +6,7 @@ function isSubDirectory(parent: string, child: string) {
   return !relative(parent, child).startsWith('..');
 }
 
-export function write({ basePath, config, sourceFiles }: Project) {
+export function write({ basePath, config, packages, sourceFiles }: Project) {
   const printer = ts.createPrinter();
 
   // configFile
@@ -14,6 +14,13 @@ export function write({ basePath, config, sourceFiles }: Project) {
     config.fileName,
     JSON.stringify(config.parsedCommandLine.raw, null, 2),
   );
+
+  // packages
+  packages.forEach((pkg) => {
+    if (isSubDirectory(basePath, pkg.fileName))
+      ts.sys.writeFile(pkg.fileName, pkg.raw);
+    else console.warn(`warning: ${pkg.fileName} is not under ${basePath}.`);
+  });
 
   // sourceFiles
   sourceFiles.forEach((sourceFile) => {

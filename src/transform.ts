@@ -14,6 +14,7 @@ export function transform(
   {
     basePath: srcBasePath,
     config: srcConfig,
+    packages: srcPackages,
     sourceFiles: srcSourceFiles,
   }: Project,
   distBasePath: string,
@@ -22,6 +23,10 @@ export function transform(
     fileName: transformPath(srcBasePath, distBasePath, srcConfig.fileName),
     parsedCommandLine: srcConfig.parsedCommandLine,
   };
+  const distPackages = srcPackages.map((sourceFile) => ({
+    ...sourceFile,
+    fileName: transformPath(srcBasePath, distBasePath, sourceFile.fileName),
+  }));
   const distSourceFiles = srcSourceFiles.map((sourceFile) => ({
     ...sourceFile,
     fileName: transformPath(srcBasePath, distBasePath, sourceFile.fileName),
@@ -30,6 +35,7 @@ export function transform(
   return {
     basePath: distBasePath,
     config: distConfig,
+    packages: distPackages,
     sourceFiles: distSourceFiles,
   };
 }
