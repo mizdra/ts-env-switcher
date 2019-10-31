@@ -10,11 +10,15 @@
   "scripts": {
     "start": "ts-node --files --transpile-only src/index.ts",
     "check": "prettier -l 'src/**/*.{ts,tsx}'",
+    "test": "jest",
     "test:fixtures": "scripts/test-fixtures"
   },
   "devDependencies": {
+    "@types/jest": "^24.0.21",
     "@types/node": "^11.13.8",
+    "jest": "^24.9.0",
     "prettier": "1.17.0",
+    "ts-jest": "^24.1.0",
     "ts-node": "^8.1.0",
     "typescript": "^3.4.5"
   },
