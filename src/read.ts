@@ -1,5 +1,6 @@
 import ts from 'typescript';
 import { Project } from './type';
+import { basename } from 'path';
 
 const parseConfigHost: ts.ParseConfigHost = {
   fileExists: ts.sys.fileExists,
@@ -15,9 +16,19 @@ export function read(basePath: string, configFileName: string): Project {
     parseConfigHost,
     basePath,
   );
+  const compilerHost = ts.createCompilerHost(parsedCommandLine.options);
   const program = ts.createProgram(
     parsedCommandLine.fileNames,
     parsedCommandLine.options,
+    {
+      ...compilerHost,
+      readFile: (fileName: string) => {
+        if (basename(fileName) === 'package.json') {
+          console.log(fileName);
+        }
+        return compilerHost.readFile(fileName);
+      },
+    },
   );
   const sourceFiles = program.getSourceFiles();
 
