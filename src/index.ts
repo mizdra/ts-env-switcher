@@ -2,6 +2,7 @@ import { read } from './read';
 import { transform } from './transform';
 import { write } from './write';
 import { resolve } from 'path';
+import { collectEnv } from './collect';
 
 type Option = {
   srcBasePath: string;
@@ -14,6 +15,10 @@ function checkEnv(option: Option) {
   const srcProject = read(option.srcBasePath, configFileName);
   console.log(srcProject.sourceFiles.map((sourceFile) => sourceFile.fileName));
 
+  // collect phase
+  const envList = collectEnv(srcProject);
+  console.log(envList);
+
   // transform phase
   const distProject = transform(
     srcProject,
@@ -25,6 +30,6 @@ function checkEnv(option: Option) {
 }
 
 checkEnv({
-  srcBasePath: resolve('fixtures/src/6-external-library'),
-  distPath: resolve('fixtures/dist/6-external-library'),
+  srcBasePath: resolve('fixtures/src/7-env'),
+  distPath: resolve('fixtures/dist/7-env'),
 });
