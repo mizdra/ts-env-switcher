@@ -6,7 +6,7 @@ import { collectEnv } from './collect';
 
 type Option = {
   srcBasePath: string;
-  distPath?: string;
+  distBasePath: string;
 };
 function checkEnv(option: Option) {
   const configFileName = resolve(option.srcBasePath, 'tsconfig.json');
@@ -20,16 +20,13 @@ function checkEnv(option: Option) {
   console.log(envList);
 
   // transform phase
-  const distProject = transform(
-    srcProject,
-    option.distPath || option.srcBasePath,
-  );
+  const distProject = transform(srcProject, option.distBasePath);
 
   // write phase
-  if (option.distPath) write(distProject);
+  if (option.distBasePath) write(distProject);
 }
 
 checkEnv({
   srcBasePath: resolve('fixtures/src/7-env'),
-  distPath: resolve('fixtures/dist/7-env'),
+  distBasePath: resolve('fixtures/dist/7-env'),
 });
