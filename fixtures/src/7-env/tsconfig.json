@@ -4,7 +4,7 @@
   "compilerOptions": {
     /* Basic Options */
     "target": "es2020",
-    "lib": ["es5", "dom"],
+    "lib": ["es5"],
     "typeRoots": [],
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
