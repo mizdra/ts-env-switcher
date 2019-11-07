@@ -19,11 +19,15 @@ function checkEnv(option: Option) {
   const envList = collectEnv(srcProject);
   console.log(envList);
 
-  // transform phase
-  const distProject = transform(srcProject, option.distBasePath);
+  for (const env of envList) {
+    const distPath = resolve(option.distBasePath, env);
 
-  // write phase
-  if (option.distBasePath) write(distProject);
+    // transform phase
+    const distProject = transform(srcProject, distPath);
+
+    // write phase
+    if (option.distBasePath) write(distProject);
+  }
 }
 
 checkEnv({
