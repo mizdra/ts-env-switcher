@@ -29,6 +29,7 @@
     "typescript": "^3.4.5"
   },
   "dependencies": {
+    "commander": "^4.0.1",
     "shella": "^1.0.1"
   }
 }

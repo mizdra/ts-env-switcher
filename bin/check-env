@@ -2,8 +2,18 @@
 
 const { resolve } = require('path');
 const { checkEnv } = require('../dist');
+const commander = require('commander');
+
+const program = new commander.Command();
+
+program.option(
+  '--outDir <directory>',
+  'Redirect output structure to the directory.',
+);
+
+program.parse(process.argv);
 
 checkEnv({
-  srcBasePath: resolve('fixtures/src/8-complex-tsconfig'),
-  distBasePath: resolve('fixtures/dist/8-complex-tsconfig'),
+  srcBasePath: resolve(program.args[0]),
+  distBasePath: resolve(program.outDir),
 });
