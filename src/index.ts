@@ -23,7 +23,10 @@ function checkEnv(option: Option) {
     const distPath = resolve(option.distBasePath, env);
 
     // transform phase
-    const distProject = transform(srcProject, distPath);
+    const distProject = transform(srcProject, {
+      env: env,
+      distBasePath: distPath,
+    });
 
     // write phase
     if (option.distBasePath) write(distProject);
