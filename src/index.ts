@@ -31,6 +31,6 @@ function checkEnv(option: Option) {
 }
 
 checkEnv({
-  srcBasePath: resolve('fixtures/src/7-env'),
-  distBasePath: resolve('fixtures/dist/7-env'),
+  srcBasePath: resolve('fixtures/src/8-complex-tsconfig'),
+  distBasePath: resolve('fixtures/dist/8-complex-tsconfig'),
 });
