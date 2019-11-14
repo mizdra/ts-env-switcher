@@ -5,7 +5,7 @@ const shella = require('shella');
 (async () => {
   const { stdout: lsStdout } = await shella({
     stdio: 'pipe',
-  })`ls -d1 fixtures/src/*`;
+  })`ls -d1 fixtures/dist/*/*`;
   const fixtures = lsStdout.split('\n');
 
   for (const fixture of fixtures) {
