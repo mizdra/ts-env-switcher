@@ -3,10 +3,10 @@
   "exclude": ["node_modules"],
   "compilerOptions": {
     /* Basic Options */
-    // "outDir": "./dist",
+    "outDir": "./dist",
     "target": "esnext",
     "lib": ["es2020"],
-    "declaration": false,
+    "declaration": true,
     // "jsx": "react",
 
     /* Module Options */

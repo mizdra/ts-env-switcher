@@ -8,7 +8,8 @@ type Option = {
   srcBasePath: string;
   distBasePath: string;
 };
-function checkEnv(option: Option) {
+
+export function checkEnv(option: Option) {
   const configFileName = resolve(option.srcBasePath, 'tsconfig.json');
 
   // read phase
@@ -32,8 +33,3 @@ function checkEnv(option: Option) {
     if (option.distBasePath) write(distProject);
   }
 }
-
-checkEnv({
-  srcBasePath: resolve('fixtures/src/8-complex-tsconfig'),
-  distBasePath: resolve('fixtures/dist/8-complex-tsconfig'),
-});

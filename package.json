@@ -7,8 +7,12 @@
   "author": "mizdra <pp.mizdra@gmail.com>",
   "license": "MIT",
   "private": true,
+  "bin": {
+    "check-env": "bin/check-env"
+  },
   "scripts": {
     "start": "ts-node --files --transpile-only src/index.ts",
+    "build": "tsc -p .",
     "clean": "rimraf fixtures/dist",
     "check": "prettier -l 'src/**/*.{ts,tsx}'",
     "test": "jest",

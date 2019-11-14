@@ -1,0 +1,9 @@
+#!/usr/bin/env node
+
+const { resolve } = require('path');
+const { checkEnv } = require('../dist');
+
+checkEnv({
+  srcBasePath: resolve('fixtures/src/8-complex-tsconfig'),
+  distBasePath: resolve('fixtures/dist/8-complex-tsconfig'),
+});
