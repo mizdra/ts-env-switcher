@@ -10,20 +10,18 @@ function createTsConfig(
   config: Project['config'],
   sourceFiles: Project['sourceFiles'],
 ): any {
-  return {
-    files: sourceFiles.map((sourceFile) => sourceFile.fileName),
-    compilerOptions: config.compilerOptions,
-  };
+  return (ts as any).generateTSConfig(
+    config.compilerOptions,
+    sourceFiles.map((sourceFile) => sourceFile.fileName),
+    '\n',
+  );
 }
 
 export function write({ basePath, config, packages, sourceFiles }: Project) {
   const printer = ts.createPrinter();
 
   // configFile
-  ts.sys.writeFile(
-    config.fileName,
-    JSON.stringify(createTsConfig(config, sourceFiles), null, 2),
-  );
+  ts.sys.writeFile(config.fileName, createTsConfig(config, sourceFiles));
 
   // packages
   packages.forEach((pkg) => {
