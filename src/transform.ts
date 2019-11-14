@@ -1,13 +1,17 @@
 import ts from 'typescript';
 import { Project } from './type';
 import { resolve, relative } from 'path';
+import { isSubDirectory } from './lib/path';
 
 function transformPath(
   srcBasePath: string,
   distBasePath: string,
   srcPath: string,
 ) {
-  return resolve(distBasePath, relative(srcBasePath, srcPath));
+  if (isSubDirectory(srcBasePath, srcPath))
+    return resolve(distBasePath, relative(srcBasePath, srcPath));
+  // 外部モジュールの場合は変換せずに返す
+  return srcPath;
 }
 
 export type TransformOption = {

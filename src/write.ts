@@ -1,10 +1,6 @@
 import ts from 'typescript';
 import { Project } from './type';
-import { relative } from 'path';
-
-function isSubDirectory(parent: string, child: string) {
-  return !relative(parent, child).startsWith('..');
-}
+import { isSubDirectory } from './lib/path';
 
 function createTsConfig(
   config: Project['config'],
