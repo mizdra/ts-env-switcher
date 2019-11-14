@@ -19,9 +19,9 @@ export function transform(
   }: Project,
   distBasePath: string,
 ): Project {
-  const distConfig = {
+  const distConfig: Project['config'] = {
     fileName: transformPath(srcBasePath, distBasePath, srcConfig.fileName),
-    parsedCommandLine: srcConfig.parsedCommandLine,
+    compilerOptions: srcConfig.compilerOptions,
   };
   const distPackages = srcPackages.map((sourceFile) => ({
     ...sourceFile,

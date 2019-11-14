@@ -6,13 +6,23 @@ function isSubDirectory(parent: string, child: string) {
   return !relative(parent, child).startsWith('..');
 }
 
+function createTsConfig(
+  config: Project['config'],
+  sourceFiles: Project['sourceFiles'],
+): any {
+  return {
+    files: sourceFiles.map((sourceFile) => sourceFile.fileName),
+    compilerOptions: config.compilerOptions,
+  };
+}
+
 export function write({ basePath, config, packages, sourceFiles }: Project) {
   const printer = ts.createPrinter();
 
   // configFile
   ts.sys.writeFile(
     config.fileName,
-    JSON.stringify(config.parsedCommandLine.raw, null, 2),
+    JSON.stringify(createTsConfig(config, sourceFiles), null, 2),
   );
 
   // packages

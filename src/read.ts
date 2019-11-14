@@ -41,7 +41,7 @@ export function read(basePath: string, configFileName: string): Project {
     basePath,
     config: {
       fileName: configFileName,
-      parsedCommandLine,
+      compilerOptions: parsedCommandLine.options,
     },
     packages,
     sourceFiles,
