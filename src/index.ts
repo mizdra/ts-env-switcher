@@ -30,6 +30,6 @@ export function checkEnv(option: Option) {
     });
 
     // write phase
-    if (option.distBasePath) write(distProject);
+    write(distProject);
   }
 }
