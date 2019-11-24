@@ -1,7 +1,7 @@
-declare function Env(envName: string): (constructor: Function) => void;
+function fnA() {
+  // env: dom
+}
 
-@Env('dom')
-class A {}
-
-@Env('webworker')
-class B {}
+function fnB() {
+  // env: webworker
+}
