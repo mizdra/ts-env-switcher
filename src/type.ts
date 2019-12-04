@@ -14,3 +14,7 @@ export type Project = Readonly<{
   }[];
   sourceFiles: readonly ts.SourceFile[];
 }>;
+
+export type SwitchDirective = {
+  lib?: string[];
+};

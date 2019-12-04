@@ -1,8 +1,6 @@
-import ts from 'typescript';
-import { Project } from './type';
+import { Project, SwitchDirective } from './type';
 import { resolve, relative } from 'path';
 import { isSubDirectory } from './lib/path';
-import { SwitchDirective } from './collect';
 
 function transformPath(
   srcBasePath: string,

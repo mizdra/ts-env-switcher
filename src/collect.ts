@@ -1,12 +1,8 @@
 import ts from 'typescript';
-import { Project } from './type';
+import { Project, SwitchDirective } from './type';
 import { debug, format } from './lib/logger';
 
 const DIREVTIVE_HEADER = 'switch:';
-
-export type SwitchDirective = {
-  lib?: string[];
-};
 
 function findSwitchDirective(
   sourceFile: ts.SourceFile,
