@@ -2,7 +2,15 @@ import { SwitchDirective } from '../type';
 
 export function createDirectiveIdentifier(directive: SwitchDirective): string {
   const normalizedDirective = normalizeDirective(directive);
-  return JSON.stringify(normalizedDirective);
+  return JSON.stringify(normalizedDirective)
+    .replace(/\"/g, '')
+    .replace(/\{/g, '')
+    .replace(/\}/g, '')
+    .replace(/\[/g, '-')
+    .replace(/\]/g, '-')
+    .replace(/\:/g, '')
+    .replace(/,/g, '-')
+    .replace(/-$/, ''); // `-` で終わらないように
 }
 
 export function normalizeDirective(
