@@ -36,11 +36,9 @@ export function transform(
     ),
     compilerOptions: {
       ...srcConfig.compilerOptions,
-      // lib に Env アノテーションで指定された型定義を追加
-      lib: [
-        ...(srcConfig.compilerOptions.lib || []),
-        `lib.${transformOption.env}.d.ts`,
-      ],
+      // lib をディレクティブで指定されたもので上書きする
+      // TODO: lib が undefinedの場合を考慮する
+      lib: [`lib.${transformOption.env}.d.ts`],
     },
   };
   const distPackages = srcPackages.map((sourceFile) => ({
