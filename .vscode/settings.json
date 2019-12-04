@@ -1,4 +1,6 @@
 {
   "editor.tabSize": 2,
-  "editor.formatOnSave": true
+  "editor.formatOnSave": true,
+  // 最新の構文に対応した tsserver を使いたいので, VSCodeにバンドルされているTypeScriptではなく, node_modulesにあるTypeScriptを使う
+  "typescript.tsdk": "node_modules/typescript/lib"
 }
