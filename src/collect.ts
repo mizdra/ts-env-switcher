@@ -1,5 +1,6 @@
 import ts from 'typescript';
 import { Project } from './type';
+import { debug, format } from './lib/logger';
 
 const DIREVTIVE_HEADER = 'switch:';
 
@@ -27,6 +28,8 @@ function findSwitchDirective(
           : undefined,
       );
     if (!comment.trimStart().startsWith(DIREVTIVE_HEADER)) continue;
+
+    debug(format({ comment }));
     const jsonStartPosInComment =
       comment.indexOf(DIREVTIVE_HEADER) + DIREVTIVE_HEADER.length;
 

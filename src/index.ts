@@ -3,6 +3,7 @@ import { transform } from './transform';
 import { write } from './write';
 import { resolve } from 'path';
 import { collectEnv } from './collect';
+import { info, warning, error, debug, format } from './lib/logger';
 
 type Option = {
   srcBasePath: string;
@@ -14,11 +15,13 @@ export function checkEnv(option: Option) {
 
   // read phase
   const srcProject = read(option.srcBasePath, configFileName);
-  console.log(srcProject.sourceFiles.map((sourceFile) => sourceFile.fileName));
+  debug(
+    format(srcProject.sourceFiles.map((sourceFile) => sourceFile.fileName)),
+  );
 
   // collect phase
   const envList = collectEnv(srcProject);
-  console.log(envList);
+  debug(format(envList));
 
   for (const env of envList) {
     const distPath = resolve(option.distBasePath, env);
