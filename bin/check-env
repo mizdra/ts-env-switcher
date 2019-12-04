@@ -1,6 +1,5 @@
 #!/usr/bin/env node
 
-const { resolve } = require('path');
 const { checkEnv } = require('../dist');
 const commander = require('commander');
 
@@ -14,6 +13,6 @@ program.option(
 program.parse(process.argv);
 
 checkEnv({
-  srcBasePath: resolve(program.args[0]),
-  distBasePath: resolve(program.outDir),
+  srcBasePath: program.args[0],
+  distBasePath: program.outDir,
 });

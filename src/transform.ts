@@ -1,5 +1,5 @@
 import { Project, SwitchDirective } from './type';
-import { resolve, relative } from 'path';
+import { join, relative } from 'path';
 import { isSubDirectory } from './lib/path';
 
 function transformPath(
@@ -7,8 +7,11 @@ function transformPath(
   distBasePath: string,
   srcPath: string,
 ) {
-  if (isSubDirectory(srcBasePath, srcPath))
-    return resolve(distBasePath, relative(srcBasePath, srcPath));
+  if (isSubDirectory(srcBasePath, srcPath)) {
+    console.log(relative(srcBasePath, srcPath));
+    return relative(srcBasePath, srcPath);
+  }
+  console.log(srcPath)
   // 外部モジュールの場合は変換せずに返す
   return srcPath;
 }

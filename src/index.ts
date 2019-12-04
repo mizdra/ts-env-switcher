@@ -1,7 +1,7 @@
 import { read } from './read';
 import { transform } from './transform';
 import { write } from './write';
-import { resolve } from 'path';
+import { join } from 'path';
 import { collectDirectives } from './collect';
 import { debug, format } from './lib/logger';
 import { createDirectiveIdentifier } from './lib/directive';
@@ -12,7 +12,7 @@ type Option = {
 };
 
 export function checkEnv(option: Option) {
-  const configFileName = resolve(option.srcBasePath, 'tsconfig.json');
+  const configFileName = join(option.srcBasePath, 'tsconfig.json');
 
   // read phase
   const srcProject = read(option.srcBasePath, configFileName);
@@ -25,7 +25,7 @@ export function checkEnv(option: Option) {
   debug(format(directives));
 
   for (const directive of directives) {
-    const distPath = resolve(
+    const distPath = join(
       option.distBasePath,
       createDirectiveIdentifier(directive),
     );
