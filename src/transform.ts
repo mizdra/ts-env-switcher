@@ -1,6 +1,7 @@
 import { Project, SwitchDirective } from './type';
 import { join, relative } from 'path';
 import { isSubDirectory } from './lib/path';
+import ts from 'typescript';
 
 function transformPath(
   srcBasePath: string,
@@ -11,9 +12,21 @@ function transformPath(
     console.log(relative(srcBasePath, srcPath));
     return relative(srcBasePath, srcPath);
   }
-  console.log(srcPath)
+  console.log(srcPath);
   // 外部モジュールの場合は変換せずに返す
   return srcPath;
+}
+
+function pathTransformerFactory(
+  srcBasePath: string,
+  distBasePath: string,
+): ts.TransformerFactory<ts.SourceFile> {
+  return (context: ts.TransformationContext) => (sourceFile: ts.SourceFile) => {
+    return {
+      ...sourceFile,
+      fileName: transformPath(srcBasePath, distBasePath, sourceFile.fileName),
+    };
+  };
 }
 
 export type TransformOption = {
@@ -39,7 +52,9 @@ export function transform(
     compilerOptions: {
       ...srcConfig.compilerOptions,
       // lib をディレクティブで指定されたもので上書きする
-      lib: (transformOption.directive.lib ?? []).map(libName => `lib.${libName}.d.ts`),
+      lib: (transformOption.directive.lib ?? []).map(
+        (libName) => `lib.${libName}.d.ts`,
+      ),
     },
   };
   const distPackages = srcPackages.map((sourceFile) => ({
@@ -50,14 +65,11 @@ export function transform(
       sourceFile.fileName,
     ),
   }));
-  const distSourceFiles = srcSourceFiles.map((sourceFile) => ({
-    ...sourceFile,
-    fileName: transformPath(
-      srcBasePath,
-      transformOption.distBasePath,
-      sourceFile.fileName,
-    ),
-  }));
+  const transformationResult = ts.transform(
+    srcSourceFiles.map((sourceFile) => ts.getMutableClone(sourceFile)),
+    [pathTransformerFactory(srcBasePath, transformOption.distBasePath)],
+  );
+  const distSourceFiles = transformationResult.transformed;
 
   return {
     basePath: transformOption.distBasePath,
