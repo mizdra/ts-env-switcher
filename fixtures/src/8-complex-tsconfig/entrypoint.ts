@@ -1,7 +1,5 @@
-function fnA() {
-  // env: dom
-}
+// switch: { "lib": ["dom"] }
+function fnA() {}
 
-function fnB() {
-  // env: webworker
-}
+// switch: { "lib": ["webworker"] }
+function fnB() {}
