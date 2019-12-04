@@ -1,5 +1,6 @@
 // switch: { "lib": ["dom"] }
 function fnA() {}
 
-// switch: { "lib": ["webworker"] }
-function fnB() {}
+const fnB = /* switch: { "lib": ["es5"] } */ function() {};
+
+const fnC = /* switch: { "lib": ["ESNext"] } */ () => {};

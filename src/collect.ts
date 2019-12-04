@@ -9,7 +9,7 @@ export type SwitchDirective = {
 
 function findSwitchDirective(
   sourceFile: ts.SourceFile,
-  node: ts.FunctionDeclaration,
+  node: ts.FunctionDeclaration | ts.FunctionExpression | ts.ArrowFunction,
 ): SwitchDirective | undefined {
   const nodeFullText = node.getFullText(sourceFile);
   const commentRangesInNode = ts.getLeadingCommentRanges(nodeFullText, 0);
@@ -39,7 +39,11 @@ function findSwitchDirective(
 function collectEnvRec(sourceFile: ts.SourceFile, node: ts.Node): string[] {
   const envList: string[] = [];
 
-  if (ts.isFunctionDeclaration(node)) {
+  if (
+    ts.isFunctionDeclaration(node) ||
+    ts.isFunctionExpression(node) ||
+    ts.isArrowFunction(node)
+  ) {
     const switchDirective = findSwitchDirective(sourceFile, node);
 
     if (switchDirective && switchDirective.lib) {
