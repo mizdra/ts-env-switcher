@@ -11,20 +11,18 @@ function findSwitchDirective(
   sourceFile: ts.SourceFile,
   node: ts.FunctionDeclaration,
 ): SwitchDirective | undefined {
-  const commentRanges = ts.getLeadingCommentRanges(
-    sourceFile.text,
-    node.getFullStart(),
-  );
-  if (!commentRanges) return undefined;
+  const nodeFullText = node.getFullText(sourceFile);
+  const commentRangesInNode = ts.getLeadingCommentRanges(nodeFullText, 0);
+  if (!commentRangesInNode) return undefined;
 
-  for (const commentRange of commentRanges) {
-    const comment = sourceFile.text
-      // ソースコードからコメントを抜き出す
-      .slice(commentRange.pos, commentRange.end)
+  for (const commentRangeInNode of commentRangesInNode) {
+    const comment = nodeFullText
+      // ノードからコメントを抜き出す
+      .slice(commentRangeInNode.pos, commentRangeInNode.end)
       // `//` or `/*` `*/` を取り除く
       .slice(
         2,
-        commentRange.kind === ts.SyntaxKind.MultiLineCommentTrivia
+        commentRangeInNode.kind === ts.SyntaxKind.MultiLineCommentTrivia
           ? -2
           : undefined,
       );
