@@ -1,6 +1,7 @@
 import ts from 'typescript';
 import { Project } from './type';
 import { isSubDirectory } from './lib/path';
+import { warning } from './lib/logger';
 
 function createTsConfig(
   config: Project['config'],
@@ -23,7 +24,7 @@ export function write({ basePath, config, packages, sourceFiles }: Project) {
   packages.forEach((pkg) => {
     if (isSubDirectory(basePath, pkg.fileName))
       ts.sys.writeFile(pkg.fileName, pkg.raw);
-    else console.warn(`warning: ${pkg.fileName} is not under ${basePath}.`);
+    else warning(`${pkg.fileName} is not under ${basePath}.`);
   });
 
   // sourceFiles
@@ -31,7 +32,6 @@ export function write({ basePath, config, packages, sourceFiles }: Project) {
     const code = printer.printFile(sourceFile);
     if (isSubDirectory(basePath, sourceFile.fileName))
       ts.sys.writeFile(sourceFile.fileName, code);
-    else
-      console.warn(`warning: ${sourceFile.fileName} is not under ${basePath}.`);
+    else warning(`${sourceFile.fileName} is not under ${basePath}.`);
   });
 }
