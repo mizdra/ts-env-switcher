@@ -6,15 +6,13 @@ import ts from 'typescript';
 function transformPath(
   srcBasePath: string,
   distBasePath: string,
-  srcPath: string,
+  srcFileName: string,
 ) {
-  if (isSubDirectory(srcBasePath, srcPath)) {
-    console.log(relative(srcBasePath, srcPath));
-    return relative(srcBasePath, srcPath);
+  if (isSubDirectory(srcBasePath, srcFileName)) {
+    return join(distBasePath, relative(srcBasePath, srcFileName));
   }
-  console.log(srcPath);
   // 外部モジュールの場合は変換せずに返す
-  return srcPath;
+  return srcFileName;
 }
 
 function pathTransformerFactory(
