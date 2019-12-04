@@ -2,13 +2,17 @@ import { read } from './read';
 import { transform } from './transform';
 import { write } from './write';
 import { resolve } from 'path';
-import { collectEnv } from './collect';
-import { info, warning, error, debug, format } from './lib/logger';
+import { collectDirectives, SwitchDirective } from './collect';
+import { debug, format } from './lib/logger';
 
 type Option = {
   srcBasePath: string;
   distBasePath: string;
 };
+
+function createDistProjectName(directive: SwitchDirective): string {
+  return 'lib-' + (directive.lib ?? []).sort().join('+')
+}
 
 export function checkEnv(option: Option) {
   const configFileName = resolve(option.srcBasePath, 'tsconfig.json');
@@ -20,15 +24,15 @@ export function checkEnv(option: Option) {
   );
 
   // collect phase
-  const envList = collectEnv(srcProject);
-  debug(format(envList));
+  const directives = collectDirectives(srcProject);
+  debug(format(directives));
 
-  for (const env of envList) {
-    const distPath = resolve(option.distBasePath, env);
+  for (const directive of directives) {
+    const distPath = resolve(option.distBasePath, createDistProjectName(directive));
 
     // transform phase
     const distProject = transform(srcProject, {
-      env: env,
+      directive,
       distBasePath: distPath,
     });
 

@@ -39,8 +39,11 @@ function findSwitchDirective(
   return undefined;
 }
 
-function collectEnvRec(sourceFile: ts.SourceFile, node: ts.Node): string[] {
-  const envList: string[] = [];
+function collectDirectivesRec(
+  sourceFile: ts.SourceFile,
+  node: ts.Node,
+): SwitchDirective[] {
+  const directives: SwitchDirective[] = [];
 
   if (
     ts.isFunctionDeclaration(node) ||
@@ -48,23 +51,22 @@ function collectEnvRec(sourceFile: ts.SourceFile, node: ts.Node): string[] {
     ts.isArrowFunction(node)
   ) {
     const switchDirective = findSwitchDirective(sourceFile, node);
-
-    if (switchDirective && switchDirective.lib) {
-      envList.push(switchDirective.lib[0]); // TODO: 複数のlibに対応する
+    if (switchDirective) {
+      directives.push(switchDirective);
     }
   }
 
   node.forEachChild((child) => {
-    envList.push(...collectEnvRec(sourceFile, child));
+    directives.push(...collectDirectivesRec(sourceFile, child));
   });
 
-  return envList;
+  return directives;
 }
 
-export function collectEnv(project: Project): string[] {
-  const envList: string[] = [];
+export function collectDirectives(project: Project): SwitchDirective[] {
+  const directives: SwitchDirective[] = [];
   project.sourceFiles.forEach((sourceFile) => {
-    envList.push(...collectEnvRec(sourceFile, sourceFile));
+    directives.push(...collectDirectivesRec(sourceFile, sourceFile));
   });
-  return envList;
+  return directives;
 }

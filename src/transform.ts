@@ -2,6 +2,7 @@ import ts from 'typescript';
 import { Project } from './type';
 import { resolve, relative } from 'path';
 import { isSubDirectory } from './lib/path';
+import { SwitchDirective } from './collect';
 
 function transformPath(
   srcBasePath: string,
@@ -15,7 +16,7 @@ function transformPath(
 }
 
 export type TransformOption = {
-  env: string;
+  directive: SwitchDirective;
   distBasePath: string;
 };
 
@@ -37,8 +38,7 @@ export function transform(
     compilerOptions: {
       ...srcConfig.compilerOptions,
       // lib をディレクティブで指定されたもので上書きする
-      // TODO: lib が undefinedの場合を考慮する
-      lib: [`lib.${transformOption.env}.d.ts`],
+      lib: (transformOption.directive.lib ?? []).map(libName => `lib.${libName}.d.ts`),
     },
   };
   const distPackages = srcPackages.map((sourceFile) => ({
