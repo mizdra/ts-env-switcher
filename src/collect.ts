@@ -18,17 +18,11 @@ function findSwitchDirective(
       // ノードからコメントを抜き出す
       .slice(commentRangeInNode.pos, commentRangeInNode.end)
       // `//` or `/*` `*/` を取り除く
-      .slice(
-        2,
-        commentRangeInNode.kind === ts.SyntaxKind.MultiLineCommentTrivia
-          ? -2
-          : undefined,
-      );
+      .slice(2, commentRangeInNode.kind === ts.SyntaxKind.MultiLineCommentTrivia ? -2 : undefined);
     if (!comment.trimStart().startsWith(DIREVTIVE_HEADER)) continue;
 
     debug(format({ comment }));
-    const jsonStartPosInComment =
-      comment.indexOf(DIREVTIVE_HEADER) + DIREVTIVE_HEADER.length;
+    const jsonStartPosInComment = comment.indexOf(DIREVTIVE_HEADER) + DIREVTIVE_HEADER.length;
 
     // ディレクティブが1つでも見つかったら即 return する
     return JSON.parse(comment.slice(jsonStartPosInComment));
@@ -36,17 +30,10 @@ function findSwitchDirective(
   return undefined;
 }
 
-function collectDirectivesRec(
-  sourceFile: ts.SourceFile,
-  node: ts.Node,
-): SwitchDirective[] {
+function collectDirectivesRec(sourceFile: ts.SourceFile, node: ts.Node): SwitchDirective[] {
   const directives: SwitchDirective[] = [];
 
-  if (
-    ts.isFunctionDeclaration(node) ||
-    ts.isFunctionExpression(node) ||
-    ts.isArrowFunction(node)
-  ) {
+  if (ts.isFunctionDeclaration(node) || ts.isFunctionExpression(node) || ts.isArrowFunction(node)) {
     const switchDirective = findSwitchDirective(sourceFile, node);
     if (switchDirective) {
       directives.push(switchDirective);
@@ -63,9 +50,7 @@ function collectDirectivesRec(
 function filterDuplicate(directives: SwitchDirective[]): SwitchDirective[] {
   const uniqueDirectives: SwitchDirective[] = [];
   for (const directive of directives) {
-    const duplicate = uniqueDirectives.find((uniqueDirective) =>
-      equalDirective(uniqueDirective, directive),
-    );
+    const duplicate = uniqueDirectives.find((uniqueDirective) => equalDirective(uniqueDirective, directive));
     if (duplicate) continue; // 重複する場合は除外
     uniqueDirectives.push(directive);
   }

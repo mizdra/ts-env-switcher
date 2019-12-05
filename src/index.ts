@@ -16,19 +16,14 @@ export function checkEnv(option: Option) {
 
   // read phase
   const srcProject = read(option.srcBasePath, configFileName);
-  debug(
-    format(srcProject.sourceFiles.map((sourceFile) => sourceFile.fileName)),
-  );
+  debug(format(srcProject.sourceFiles.map((sourceFile) => sourceFile.fileName)));
 
   // collect phase
   const directives = collectDirectives(srcProject);
   debug(format(directives));
 
   for (const directive of directives) {
-    const distPath = join(
-      option.distBasePath,
-      createDirectiveIdentifier(directive),
-    );
+    const distPath = join(option.distBasePath, createDirectiveIdentifier(directive));
 
     // transform phase
     const distProject = transform(srcProject, {

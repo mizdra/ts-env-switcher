@@ -13,17 +13,12 @@ export function createDirectiveIdentifier(directive: SwitchDirective): string {
     .replace(/-$/, ''); // `-` で終わらないように
 }
 
-export function normalizeDirective(
-  directive: SwitchDirective,
-): SwitchDirective {
+export function normalizeDirective(directive: SwitchDirective): SwitchDirective {
   const normalizedDirective: SwitchDirective = {};
   if (directive.lib) normalizedDirective.lib = directive.lib.slice().sort();
   return normalizedDirective;
 }
 
-export function equalDirective(
-  a: SwitchDirective,
-  b: SwitchDirective,
-): boolean {
+export function equalDirective(a: SwitchDirective, b: SwitchDirective): boolean {
   return createDirectiveIdentifier(a) === createDirectiveIdentifier(b);
 }
