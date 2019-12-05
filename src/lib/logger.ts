@@ -18,5 +18,5 @@ export function debug(message: any) {
 }
 
 export function format(obj: Object): string {
-  return formatWithOptions({ colors: true }, '%O', obj);
+  return formatWithOptions({ colors: true, maxArrayLength: null }, '%O', obj);
 }
