@@ -13,7 +13,7 @@ function collectDirectivesRec(sourceFile: ts.SourceFile, node: ts.Node): SwitchD
     }
   }
 
-  node.forEachChild((child) => {
+  ts.forEachChild(node, (child) => {
     directives.push(...collectDirectivesRec(sourceFile, child));
   });
 
