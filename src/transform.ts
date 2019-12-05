@@ -29,8 +29,14 @@ function deleteBodyTransformerFactory(directive: SwitchDirective): ts.Transforme
       if (isFunction(node) && node.body) {
         const actualDirective = findSwitchDirective(sourceFile, node);
 
-        // ディレクティブが付いていない関数 & 異なるディレクティブの関数の body を削除
-        if (!(actualDirective && equalDirective(actualDirective, directive))) {
+        // 異なるディレクティブの関数の body を削除
+        // NOTE: 以下のようなネストしたアロー関数を残したいので, ディレクティブが付いていない関数の body は削除しない
+        // ```
+        // function scrape() {
+        //   page.evaluate(/* switch: { "lib": ["es5", "dom"] } */ () => { ... })
+        // }
+        // ```
+        if (actualDirective && !equalDirective(actualDirective, directive)) {
           node = removeFunctionBody(node);
         }
       }
