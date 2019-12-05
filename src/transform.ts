@@ -2,6 +2,7 @@ import { Project, SwitchDirective } from './type';
 import { join, relative } from 'path';
 import { isSubDirectory } from './lib/path';
 import ts from 'typescript';
+import { isFunction, removeFunctionBody } from './lib/ast';
 
 function transformPath(srcBasePath: string, distBasePath: string, srcFileName: string) {
   if (isSubDirectory(srcBasePath, srcFileName)) {
@@ -9,17 +10,6 @@ function transformPath(srcBasePath: string, distBasePath: string, srcFileName: s
   }
   // 外部モジュールの場合は変換せずに返す
   return srcFileName;
-}
-
-function createEmptyBody() {
-  return ts.createBlock(
-    [
-      ts.createReturn(
-        ts.createAsExpression(ts.createNumericLiteral('0'), ts.createKeywordTypeNode(ts.SyntaxKind.NeverKeyword)),
-      ),
-    ],
-    true,
-  );
 }
 
 function pathTransformerFactory(srcBasePath: string, distBasePath: string): ts.TransformerFactory<ts.SourceFile> {
@@ -35,43 +25,8 @@ function deleteBodyTransformerFactory(directive: SwitchDirective): ts.Transforme
   return (context: ts.TransformationContext) => (sourceFile: ts.SourceFile) => {
     function visit(node: ts.Node): ts.Node {
       // NOTE: `node.body` は `undefined` の可能性があるので undefined チェックする
-      if (ts.isFunctionDeclaration(node) && node.body) {
-        node = ts.updateFunctionDeclaration(
-          node,
-          node.decorators,
-          node.modifiers,
-          node.asteriskToken,
-          node.name,
-          node.typeParameters,
-          node.parameters,
-          node.type,
-          createEmptyBody(),
-        );
-      }
-
-      if (ts.isFunctionExpression(node) && node.body) {
-        node = ts.updateFunctionExpression(
-          node,
-          node.modifiers,
-          node.asteriskToken,
-          node.name,
-          node.typeParameters,
-          node.parameters,
-          node.type,
-          createEmptyBody(),
-        );
-      }
-
-      if (ts.isArrowFunction(node) && node.body) {
-        node = ts.updateArrowFunction(
-          node,
-          node.modifiers,
-          node.typeParameters,
-          node.parameters,
-          node.type,
-          node.equalsGreaterThanToken,
-          createEmptyBody(),
-        );
+      if (isFunction(node) && node.body) {
+        node = removeFunctionBody(node);
       }
 
       return ts.visitEachChild(node, visit, context);
