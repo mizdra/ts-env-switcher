@@ -1,14 +1,18 @@
-// switch: { "lib": ["dom"] }
+// switch: { "lib": ["es5", "dom"] }
 function fnA() {
   window.close();
 }
 
-const fnB = /* switch: { "lib": ["es5"] } */ function() {
+const fnB = /* switch: { "lib": ["es5", "dom"] } */ function() {
+  window.close();
   Date.now();
 };
 
-const fnC = /* switch: { "lib": ["es5"] } */ () => {
+const fnC = /* switch: { "lib": ["es5", "webworker"] } */ () => {
   Date.now();
+  self.location.hostname;
 };
 
-const fnD = /* switch: { "lib": ["es5"] } */ () => Date.now();
+const fnD = /* switch: { "lib": ["webworker"] } */ () => self.location.hostname;
+
+function fnE() {}

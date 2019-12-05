@@ -2,7 +2,8 @@ import { Project, SwitchDirective } from './type';
 import { join, relative } from 'path';
 import { isSubDirectory } from './lib/path';
 import ts from 'typescript';
-import { isFunction, removeFunctionBody } from './lib/ast';
+import { isFunction, removeFunctionBody, findSwitchDirective } from './lib/ast';
+import { equalDirective } from './lib/directive';
 
 function transformPath(srcBasePath: string, distBasePath: string, srcFileName: string) {
   if (isSubDirectory(srcBasePath, srcFileName)) {
@@ -26,7 +27,12 @@ function deleteBodyTransformerFactory(directive: SwitchDirective): ts.Transforme
     function visit(node: ts.Node): ts.Node {
       // NOTE: `node.body` は `undefined` の可能性があるので undefined チェックする
       if (isFunction(node) && node.body) {
-        node = removeFunctionBody(node);
+        const actualDirective = findSwitchDirective(sourceFile, node);
+
+        // ディレクティブが付いていない関数 & 異なるディレクティブの関数の body を削除
+        if (!(actualDirective && equalDirective(actualDirective, directive))) {
+          node = removeFunctionBody(node);
+        }
       }
 
       return ts.visitEachChild(node, visit, context);
