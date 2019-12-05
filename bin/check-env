@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+#!/usr/bin/env node -r source-map-support/register
 
 const { checkEnv } = require('../dist');
 const commander = require('commander');
