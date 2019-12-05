@@ -12,7 +12,9 @@ type Props = {
 }
 
 class InitialPropsDetail extends React.Component<Props> {
-  static getInitialProps = async ({ query }: NextPageContext) => {
+  static getInitialProps = /* switch: { "lib": ["es2017", "dom"] } */ async ({
+    query,
+  }: NextPageContext) => {
     try {
       const { id } = query
       const item = await sampleFetchWrapper(
