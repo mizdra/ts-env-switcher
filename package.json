@@ -30,8 +30,10 @@
     "typescript": "^3.7.3"
   },
   "dependencies": {
+    "@types/lodash": "^4.14.149",
     "chalk": "^3.0.0",
     "commander": "^4.0.1",
+    "lodash": "^4.17.15",
     "shella": "^1.0.1"
   }
 }

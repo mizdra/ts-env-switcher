@@ -1,22 +1,15 @@
 import { SwitchDirective } from '../type';
 
 export function createDirectiveIdentifier(directive: SwitchDirective): string {
-  const normalizedDirective = normalizeDirective(directive);
-  return JSON.stringify(normalizedDirective)
-    .replace(/\"/g, '')
-    .replace(/\{/g, '')
-    .replace(/\}/g, '')
-    .replace(/\[/g, '-')
-    .replace(/\]/g, '-')
-    .replace(/\:/g, '')
-    .replace(/,/g, '-')
-    .replace(/-$/, ''); // `-` で終わらないように
+  return JSON.stringify(sortJSON(directive));
 }
 
-export function normalizeDirective(directive: SwitchDirective): SwitchDirective {
-  const normalizedDirective: SwitchDirective = {};
-  if (directive.lib) normalizedDirective.lib = directive.lib.slice().sort();
-  return normalizedDirective;
+function sortJSON(json: any): any {
+  if (typeof json !== 'object' || !json) return json;
+  if (Array.isArray(json)) return json.map(sortJSON);
+  return Object.keys(json)
+    .sort()
+    .reduce((o, k) => ({ ...o, [k]: sortJSON(json[k]) }), {});
 }
 
 export function equalDirective(a: SwitchDirective, b: SwitchDirective): boolean {

@@ -4,6 +4,7 @@ import { isSubDirectory } from './lib/path';
 import ts from 'typescript';
 import { isFunction, removeFunctionBody, findSwitchDirective } from './lib/ast';
 import { equalDirective } from './lib/directive';
+import { without, uniq } from 'lodash';
 
 function transformPath(srcBasePath: string, distBasePath: string, srcFileName: string) {
   if (isSubDirectory(srcBasePath, srcFileName)) {
@@ -47,6 +48,16 @@ function deleteBodyTransformerFactory(directive: SwitchDirective): ts.Transforme
   };
 }
 
+function updateCompilerOptions(oldCompilerOptions: ts.CompilerOptions, directive: SwitchDirective): ts.CompilerOptions {
+  let newLib = oldCompilerOptions.lib ?? [];
+  if (directive['+lib']) newLib = uniq([...newLib, ...directive['+lib'].map((libName) => `lib.${libName}.d.ts`)]);
+  if (directive['-lib']) newLib = without(newLib, ...directive['-lib'].map((libName) => `lib.${libName}.d.ts`));
+  return {
+    ...oldCompilerOptions,
+    lib: newLib,
+  };
+}
+
 export type TransformOption = {
   directive: SwitchDirective;
   distBasePath: string;
@@ -58,11 +69,7 @@ export function transform(
 ): Project {
   const distConfig: Project['config'] = {
     fileName: transformPath(srcBasePath, transformOption.distBasePath, srcConfig.fileName),
-    compilerOptions: {
-      ...srcConfig.compilerOptions,
-      // lib をディレクティブで指定されたもので上書きする
-      lib: (transformOption.directive.lib ?? []).map((libName) => `lib.${libName}.d.ts`),
-    },
+    compilerOptions: updateCompilerOptions(srcConfig.compilerOptions, transformOption.directive),
   };
   const distPackages = srcPackages.map((sourceFile) => ({
     ...sourceFile,

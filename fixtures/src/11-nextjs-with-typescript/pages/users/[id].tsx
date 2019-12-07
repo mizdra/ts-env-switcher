@@ -12,7 +12,7 @@ type Props = {
 }
 
 class InitialPropsDetail extends React.Component<Props> {
-  static getInitialProps = /* switch: { "lib": ["es2017", "dom"] } */ async ({
+  static getInitialProps = /* switch: { "-lib": ["dom"], "+lib": ["webworker"] } */ async ({
     query,
   }: NextPageContext) => {
     try {
