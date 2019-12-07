@@ -24,16 +24,16 @@ export function checkEnv(option: Option) {
 
   for (const directive of directives) {
     debug(format(directive));
-    const distPath = join(option.distBasePath, createDirectiveIdentifier(directive));
+    const distBasePath = join(option.distBasePath, createDirectiveIdentifier(directive));
 
     // transform phase
     const distProject = transform(srcProject, {
       directive,
-      distBasePath: distPath,
+      distBasePath: distBasePath,
     });
 
     // write phase
-    write(distProject);
+    write(distProject, distBasePath);
 
     check(distProject, directive);
   }

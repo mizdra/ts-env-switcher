@@ -2,32 +2,45 @@ import ts from 'typescript';
 import { Project } from './type';
 import { isSubDirectory } from './lib/path';
 import { warning } from './lib/logger';
-import { relative } from 'path';
+import { relative, join } from 'path';
 
-function createTsConfig(basePath: string, config: Project['config'], sourceFiles: Project['sourceFiles']): any {
-  return (ts as any).generateTSConfig(
-    config.compilerOptions,
-    sourceFiles.map((sourceFile) => relative(basePath, sourceFile.fileName)),
-    '\n',
-  );
-}
+export function write({ basePath, config, packages, sourceFiles }: Project, distBasePath: string) {
+  // プロジェクト外のファイルかどうか
+  function isExternalFile(fileName: string) {
+    return fileName.startsWith('..');
+  }
+  function transformPath(fileName: string) {
+    // 外部モジュールの場合は変換せずに返す
+    if (isExternalFile(fileName)) return fileName;
 
-export function write({ basePath, config, packages, sourceFiles }: Project) {
-  const printer = ts.createPrinter();
+    return join(distBasePath, relative(basePath, fileName));
+  }
+  function createTsConfig(): any {
+    return (ts as any).generateTSConfig(
+      config.compilerOptions,
+      sourceFiles.map((sourceFile) => relative(basePath, sourceFile.fileName)),
+      '\n',
+    );
+  }
 
   // configFile
-  ts.sys.writeFile(config.fileName, createTsConfig(basePath, config, sourceFiles));
+  ts.sys.writeFile(transformPath(config.fileName), createTsConfig());
 
   // packages
   packages.forEach((pkg) => {
-    if (isSubDirectory(basePath, pkg.fileName)) ts.sys.writeFile(pkg.fileName, pkg.raw);
-    else warning(`${pkg.fileName} is not under ${basePath}.`);
+    if (isExternalFile(pkg.fileName)) {
+      warning(`${pkg.fileName} は外部ファイルのため, 書き込みをスキップしました`);
+      return;
+    }
+    ts.sys.writeFile(pkg.fileName, pkg.raw);
   });
 
   // sourceFiles
   sourceFiles.forEach((sourceFile) => {
-    const code = printer.printFile(sourceFile);
-    if (isSubDirectory(basePath, sourceFile.fileName)) ts.sys.writeFile(sourceFile.fileName, code);
-    else warning(`${sourceFile.fileName} is not under ${basePath}.`);
+    if (isExternalFile(sourceFile.fileName)) {
+      warning(`${sourceFile.fileName} は外部ファイルのため, 書き込みをスキップしました`);
+      return;
+    }
+    ts.sys.writeFile(transformPath(sourceFile.fileName), sourceFile.text);
   });
 }

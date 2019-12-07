@@ -14,15 +14,6 @@ function transformPath(srcBasePath: string, distBasePath: string, srcFileName: s
   return srcFileName;
 }
 
-function pathTransformerFactory(srcBasePath: string, distBasePath: string): ts.TransformerFactory<ts.SourceFile> {
-  return (context: ts.TransformationContext) => (sourceFile: ts.SourceFile) => {
-    return {
-      ...sourceFile,
-      fileName: transformPath(srcBasePath, distBasePath, sourceFile.fileName),
-    };
-  };
-}
-
 // `-lib` で指定されたデフォルトライブラリを除外する
 function filterDefaultLibraries(directive: SwitchDirective) {
   return (sourceFile: ts.SourceFile): boolean => {
@@ -57,26 +48,16 @@ export function transform(
   transformOption: TransformOption,
 ): Project {
   const distConfig: Project['config'] = {
-    fileName: transformPath(srcBasePath, transformOption.distBasePath, srcConfig.fileName),
+    ...srcConfig,
     compilerOptions: updateCompilerOptions(srcConfig.compilerOptions, transformOption.directive),
   };
-  const distPackages = srcPackages.map((sourceFile) => ({
-    ...sourceFile,
-    fileName: transformPath(srcBasePath, transformOption.distBasePath, sourceFile.fileName),
-  }));
-  const transformationResult = ts.transform(
-    srcSourceFiles
-      .map((sourceFile) => ts.getMutableClone(sourceFile))
-      .filter(filterDefaultLibraries(transformOption.directive)),
-    [
-      pathTransformerFactory(srcBasePath, transformOption.distBasePath),
-      // deleteBodyTransformerFactory(transformOption.directive),
-    ],
-  );
-  const distSourceFiles = transformationResult.transformed;
+  const distPackages = srcPackages;
+  const distSourceFiles = srcSourceFiles
+    .map((sourceFile) => ts.getMutableClone(sourceFile))
+    .filter(filterDefaultLibraries(transformOption.directive));
 
   return {
-    basePath: transformOption.distBasePath,
+    basePath: srcBasePath,
     config: distConfig,
     packages: distPackages,
     sourceFiles: distSourceFiles,
