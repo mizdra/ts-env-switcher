@@ -2,8 +2,6 @@ import { Project, SwitchDirective } from './type';
 import { join, relative } from 'path';
 import { isSubDirectory } from './lib/path';
 import ts from 'typescript';
-import { isFunction, removeFunctionBody, findSwitchDirective } from './lib/ast';
-import { equalDirective } from './lib/directive';
 import { without, uniq } from 'lodash';
 
 const DEFAULT_LIB_REG_EXP = /node_modules\/typescript\/lib\/lib\.(?<libName>\w+)\.d\.ts$/;
@@ -22,31 +20,6 @@ function pathTransformerFactory(srcBasePath: string, distBasePath: string): ts.T
       ...sourceFile,
       fileName: transformPath(srcBasePath, distBasePath, sourceFile.fileName),
     };
-  };
-}
-
-function deleteBodyTransformerFactory(directive: SwitchDirective): ts.TransformerFactory<ts.SourceFile> {
-  return (context: ts.TransformationContext) => (sourceFile: ts.SourceFile) => {
-    function visit(node: ts.Node): ts.Node {
-      // NOTE: `node.body` は `undefined` の可能性があるので undefined チェックする
-      if (isFunction(node) && node.body) {
-        const actualDirective = findSwitchDirective(sourceFile, node);
-
-        // 異なるディレクティブの関数の body を削除
-        // NOTE: 以下のようなネストしたアロー関数を残したいので, ディレクティブが付いていない関数の body は削除しない
-        // ```
-        // function scrape() {
-        //   page.evaluate(/* switch: { "lib": ["es5", "dom"] } */ () => { ... })
-        // }
-        // ```
-        if (actualDirective && !equalDirective(actualDirective, directive)) {
-          node = removeFunctionBody(node);
-        }
-      }
-
-      return ts.visitEachChild(node, visit, context);
-    }
-    return ts.visitNode(sourceFile, visit);
   };
 }
 

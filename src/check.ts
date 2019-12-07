@@ -40,26 +40,6 @@ function createDirectiveFilter(directive: SwitchDirective) {
 }
 
 export function check(project: Project, directive: SwitchDirective) {
-  // const sourceFileNames = project.sourceFiles.map((sourceFile) => sourceFile.fileName);
-  // console.log(sourceFileNames);
-  // debug(format(sourceFileNames));
-
-  // const compilerHost: ts.CompilerHost = {
-  //   ...ts.createCompilerHost(project.config.compilerOptions),
-  //   fileExists: (fileName) => {
-  //     if (project.sourceFiles.find((sourceFile) => sourceFile.fileName === fileName)) return true;
-  //     if (project.packages.find((pkg) => pkg.fileName === fileName)) return true;
-  //     return false;
-  //   },
-  //   getSourceFile: (fileName) => project.sourceFiles.find((sourceFile) => sourceFile.fileName === fileName),
-  //   readFile: (fileName) => {
-  //     const hitSourceFile = project.sourceFiles.find((sourceFile) => sourceFile.fileName === fileName);
-  //     if (hitSourceFile) return hitSourceFile.text;
-  //     const hitPackage = project.packages.find((pkg) => pkg.fileName === fileName);
-  //     if (hitPackage) return hitPackage.raw;
-  //     return undefined;
-  //   },
-  // };
   const program = ts.createProgram(
     project.sourceFiles.map((sourceFile) => sourceFile.fileName),
     project.config.compilerOptions,

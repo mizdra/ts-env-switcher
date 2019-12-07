@@ -1,16 +1,14 @@
 import ts from 'typescript';
 import { Project, SwitchDirective } from './type';
 import { equalDirective } from './lib/directive';
-import { findSwitchDirective } from './lib/ast';
+import { getDirective } from './lib/ast';
 
 function collectDirectivesRec(sourceFile: ts.SourceFile, node: ts.Node): SwitchDirective[] {
   const directives: SwitchDirective[] = [];
 
-  if (ts.isFunctionDeclaration(node) || ts.isFunctionExpression(node) || ts.isArrowFunction(node)) {
-    const switchDirective = findSwitchDirective(sourceFile, node);
-    if (switchDirective) {
-      directives.push(switchDirective);
-    }
+  const switchDirective = getDirective(sourceFile, node);
+  if (switchDirective) {
+    directives.push(switchDirective);
   }
 
   ts.forEachChild(node, (child) => {
