@@ -18,7 +18,7 @@ export function write({ basePath, config, packages, sourceFiles }: Project, dist
   function createTsConfig(): any {
     return (ts as any).generateTSConfig(
       config.compilerOptions,
-      sourceFiles.map((sourceFile) => relative(basePath, sourceFile.fileName)),
+      config.files.map((file) => relative(basePath, file)),
       '\n',
     );
   }

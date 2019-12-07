@@ -52,6 +52,7 @@ export function read(basePath: string, configFileName: string): Project {
     basePath,
     config: {
       fileName: configFileName,
+      files: parsedCommandLine.fileNames,
       compilerOptions: parsedCommandLine.options,
     },
     packages,

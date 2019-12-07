@@ -5,6 +5,7 @@ export type Project = Readonly<{
   // tsconfig.json
   config: {
     readonly fileName: string;
+    readonly files: string[];
     readonly compilerOptions: ts.CompilerOptions;
   };
   // package.json
