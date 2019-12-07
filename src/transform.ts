@@ -6,6 +6,8 @@ import { isFunction, removeFunctionBody, findSwitchDirective } from './lib/ast';
 import { equalDirective } from './lib/directive';
 import { without, uniq } from 'lodash';
 
+const DEFAULT_LIB_REG_EXP = /node_modules\/typescript\/lib\/lib\.(?<libName>\w+)\.d\.ts$/;
+
 function transformPath(srcBasePath: string, distBasePath: string, srcFileName: string) {
   if (isSubDirectory(srcBasePath, srcFileName)) {
     return join(distBasePath, relative(srcBasePath, srcFileName));
@@ -48,6 +50,21 @@ function deleteBodyTransformerFactory(directive: SwitchDirective): ts.Transforme
   };
 }
 
+// `-lib` で指定されたデフォルトライブラリを除外する
+function filterDefaultLibraries(directive: SwitchDirective) {
+  return (sourceFile: ts.SourceFile): boolean => {
+    // `-lib` がそもそも設定されていない場合は除外するべきファイルも無い
+    if (directive['-lib'] === undefined) return true;
+
+    const result = sourceFile.fileName.match(DEFAULT_LIB_REG_EXP);
+    if (result === null) return true;
+    if (result.groups === undefined)
+      throw new Error(`デフォルトライブラリ ${sourceFile.fileName} のファイル名が不正です`);
+
+    return !directive['-lib'].includes(result.groups.libName);
+  };
+}
+
 function updateCompilerOptions(oldCompilerOptions: ts.CompilerOptions, directive: SwitchDirective): ts.CompilerOptions {
   let newLib = oldCompilerOptions.lib ?? [];
   if (directive['+lib']) newLib = uniq([...newLib, ...directive['+lib'].map((libName) => `lib.${libName}.d.ts`)]);
@@ -76,7 +93,9 @@ export function transform(
     fileName: transformPath(srcBasePath, transformOption.distBasePath, sourceFile.fileName),
   }));
   const transformationResult = ts.transform(
-    srcSourceFiles.map((sourceFile) => ts.getMutableClone(sourceFile)),
+    srcSourceFiles
+      .map((sourceFile) => ts.getMutableClone(sourceFile))
+      .filter(filterDefaultLibraries(transformOption.directive)),
     [
       pathTransformerFactory(srcBasePath, transformOption.distBasePath),
       deleteBodyTransformerFactory(transformOption.directive),
