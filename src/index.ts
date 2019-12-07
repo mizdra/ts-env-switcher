@@ -5,6 +5,7 @@ import { join } from 'path';
 import { collectDirectives } from './collect';
 import { debug, format } from './lib/logger';
 import { createDirectiveIdentifier } from './lib/directive';
+import { check } from './check';
 
 type Option = {
   srcBasePath: string;
@@ -33,5 +34,7 @@ export function checkEnv(option: Option) {
 
     // write phase
     write(distProject);
+
+    check(distProject);
   }
 }
