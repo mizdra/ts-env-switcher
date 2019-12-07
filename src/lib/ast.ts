@@ -4,6 +4,9 @@ import { SwitchDirective } from '../type';
 const DIREVTIVE_HEADER = 'switch:';
 
 export function getDirective(sourceFile: ts.SourceFile, node: ts.Node): SwitchDirective | undefined {
+  // SourceFile には `getFullText` が無くて実行時エラーになるので, 明示的に無視する
+  if (ts.isSourceFile(node)) return undefined;
+
   const nodeFullText = node.getFullText(sourceFile);
   const commentRangesInNode = ts.getLeadingCommentRanges(nodeFullText, 0);
   if (!commentRangesInNode) return undefined;
