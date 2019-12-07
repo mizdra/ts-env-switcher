@@ -12,11 +12,10 @@ type Props = {
 }
 
 class InitialPropsDetail extends React.Component<Props> {
-  static getInitialProps = /* switch: { "-lib": ["dom"], "+lib": ["webworker"] } */ async ({
+  static getInitialProps = /* switch: { "-lib": ["dom"] } */ async ({
     query,
   }: NextPageContext) => {
     document.title
-    self.importScripts
     try {
       const { id } = query
       const item = await sampleFetchWrapper(

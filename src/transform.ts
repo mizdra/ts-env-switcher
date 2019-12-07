@@ -67,7 +67,6 @@ function filterDefaultLibraries(directive: SwitchDirective) {
 
 function updateCompilerOptions(oldCompilerOptions: ts.CompilerOptions, directive: SwitchDirective): ts.CompilerOptions {
   let newLib = oldCompilerOptions.lib ?? [];
-  if (directive['+lib']) newLib = uniq([...newLib, ...directive['+lib'].map((libName) => `lib.${libName}.d.ts`)]);
   if (directive['-lib']) newLib = without(newLib, ...directive['-lib'].map((libName) => `lib.${libName}.d.ts`));
   return {
     ...oldCompilerOptions,

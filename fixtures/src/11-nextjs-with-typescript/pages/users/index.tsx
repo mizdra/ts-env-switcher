@@ -27,11 +27,10 @@ const WithInitialProps: NextPage<Props> = ({ items, pathname }) => (
   </Layout>
 )
 
-WithInitialProps.getInitialProps = /* switch: { "-lib": ["dom"] } */ async ({
+WithInitialProps.getInitialProps = /* switch: { "-lib": [] } */ async ({
   pathname,
 }) => {
   document.title
-  self.importScripts
   // Example for including initial props in a Next.js function component page.
   // Don't forget to include the respective types for any props passed into
   // the component.
