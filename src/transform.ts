@@ -97,7 +97,7 @@ export function transform(
       .filter(filterDefaultLibraries(transformOption.directive)),
     [
       pathTransformerFactory(srcBasePath, transformOption.distBasePath),
-      deleteBodyTransformerFactory(transformOption.directive),
+      // deleteBodyTransformerFactory(transformOption.directive),
     ],
   );
   const distSourceFiles = transformationResult.transformed;
