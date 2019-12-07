@@ -42,7 +42,10 @@ function createDirectiveFilter(directive: SwitchDirective) {
 export function check(project: Project, directive: SwitchDirective) {
   const program = ts.createProgram(
     project.sourceFiles.map((sourceFile) => sourceFile.fileName),
-    project.config.compilerOptions,
+    {
+      ...project.config.compilerOptions,
+      noEmit: true,
+    },
     // compilerHost,
   );
   const emitResult = program.emit();
