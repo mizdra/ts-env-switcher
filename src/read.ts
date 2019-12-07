@@ -2,6 +2,7 @@ import ts from 'typescript';
 import { Project } from './type';
 import { basename, join, relative } from 'path';
 import { isSubDirectory } from './lib/path';
+import { readFileSync } from 'fs';
 
 const parseConfigHost: ts.ParseConfigHost = {
   fileExists: ts.sys.fileExists,
@@ -15,6 +16,10 @@ export function read(basePath: string, configFileName: string): Project {
   const parsedCommandLine = ts.parseJsonConfigFileContent(configFile.config, parseConfigHost, basePath);
 
   const packages: { readonly fileName: string; readonly raw: string }[] = [];
+
+  const rootPackageFileName = join(basePath, 'package.json');
+  packages.push({ fileName: rootPackageFileName, raw: readFileSync(rootPackageFileName).toString() });
+
   const compilerHost = ts.createCompilerHost(parsedCommandLine.options);
   const program = ts.createProgram(parsedCommandLine.fileNames, parsedCommandLine.options, {
     ...compilerHost,
