@@ -74,11 +74,23 @@ export function findSwitchDirective(sourceFile: ts.SourceFile, node: Func): Swit
       .slice(2, commentRangeInNode.kind === ts.SyntaxKind.MultiLineCommentTrivia ? -2 : undefined);
     if (!comment.trimStart().startsWith(DIREVTIVE_HEADER)) continue;
 
-    debug(format({ comment }));
     const jsonStartPosInComment = comment.indexOf(DIREVTIVE_HEADER) + DIREVTIVE_HEADER.length;
 
     // ディレクティブが1つでも見つかったら即 return する
     return JSON.parse(comment.slice(jsonStartPosInComment));
   }
   return undefined;
+}
+
+// node に紐づくディレクティブを返す.
+// ディレクティブが無い場合は親ノードを辿って再帰的に検索する.
+export function findSwitchDirectiveRec(
+  sourceFile: ts.SourceFile,
+  node: ts.Node | undefined,
+): SwitchDirective | undefined {
+  if (!node) return undefined;
+  if (!isFunction(node)) return findSwitchDirectiveRec(sourceFile, node.parent);
+  const hit = findSwitchDirective(sourceFile, node);
+  if (!hit) return findSwitchDirectiveRec(sourceFile, node.parent);
+  return hit;
 }

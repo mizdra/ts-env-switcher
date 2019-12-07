@@ -21,9 +21,9 @@ export function checkEnv(option: Option) {
 
   // collect phase
   const directives = collectDirectives(srcProject);
-  debug(format(directives));
 
   for (const directive of directives) {
+    debug(format(directive));
     const distPath = join(option.distBasePath, createDirectiveIdentifier(directive));
 
     // transform phase
@@ -35,6 +35,6 @@ export function checkEnv(option: Option) {
     // write phase
     write(distProject);
 
-    check(distProject);
+    check(distProject, directive);
   }
 }
