@@ -1,7 +1,11 @@
 import { SwitchDirective } from '../type';
 
 export function createDirectiveIdentifier(directive: SwitchDirective): string {
-  return JSON.stringify(sortJSON(directive));
+  return Object.entries<string[]>(sortJSON(directive))
+    .map(([key, value]) => {
+      return key + '_' + value.join('+').replace(/\//g, '-');
+    })
+    .join('__');
 }
 
 function sortJSON(json: any): any {
