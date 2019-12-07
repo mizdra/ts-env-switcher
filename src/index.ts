@@ -27,10 +27,7 @@ export function checkEnv(option: Option) {
     const distBasePath = join(option.distBasePath, createDirectiveIdentifier(directive));
 
     // transform phase
-    const distProject = transform(srcProject, {
-      directive,
-      distBasePath: distBasePath,
-    });
+    const distProject = transform(srcProject, directive);
 
     // write phase
     write(distProject, distBasePath);

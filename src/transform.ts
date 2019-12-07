@@ -6,14 +6,6 @@ import { without, uniq } from 'lodash';
 
 const DEFAULT_LIB_REG_EXP = /node_modules\/typescript\/lib\/lib\.(?<libName>\w+)\.d\.ts$/;
 
-function transformPath(srcBasePath: string, distBasePath: string, srcFileName: string) {
-  if (isSubDirectory(srcBasePath, srcFileName)) {
-    return join(distBasePath, relative(srcBasePath, srcFileName));
-  }
-  // 外部モジュールの場合は変換せずに返す
-  return srcFileName;
-}
-
 // `-lib` で指定されたデフォルトライブラリを除外する
 function filterDefaultLibraries(directive: SwitchDirective) {
   return (sourceFile: ts.SourceFile): boolean => {
@@ -38,23 +30,18 @@ function updateCompilerOptions(oldCompilerOptions: ts.CompilerOptions, directive
   };
 }
 
-export type TransformOption = {
-  directive: SwitchDirective;
-  distBasePath: string;
-};
-
 export function transform(
   { basePath: srcBasePath, config: srcConfig, packages: srcPackages, sourceFiles: srcSourceFiles }: Project,
-  transformOption: TransformOption,
+  directive: SwitchDirective,
 ): Project {
   const distConfig: Project['config'] = {
     ...srcConfig,
-    compilerOptions: updateCompilerOptions(srcConfig.compilerOptions, transformOption.directive),
+    compilerOptions: updateCompilerOptions(srcConfig.compilerOptions, directive),
   };
   const distPackages = srcPackages;
   const distSourceFiles = srcSourceFiles
     .map((sourceFile) => ts.getMutableClone(sourceFile))
-    .filter(filterDefaultLibraries(transformOption.directive));
+    .filter(filterDefaultLibraries(directive));
 
   return {
     basePath: srcBasePath,
