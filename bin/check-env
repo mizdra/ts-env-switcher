@@ -5,14 +5,19 @@ const commander = require('commander');
 
 const program = new commander.Command();
 
-program.option(
-  '--outDir <directory>',
-  'Redirect output structure to the directory.',
-);
+program
+  .option(
+    '-p, --project <directory>',
+    `'tsconfig.json' か, 'tsconfig.json' を含むフォルダーにパスが指定されたプロジェクトを型検査します. オプションを省略するとカレントディレクトリのプロジェクトを型検査します.`,
+  )
+  .option(
+    '--outDir <directory>',
+    '型検査に使用したプロジェクトを指定されたディレクトリへ出力します. オプションを省略すると, プロジェクトの出力はスキップされます.',
+  );
 
 program.parse(process.argv);
 
 checkEnv({
-  srcBasePath: program.args[0],
-  distBasePath: program.outDir,
+  project: program.project,
+  outDir: program.outDir,
 });
