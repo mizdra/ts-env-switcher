@@ -5,6 +5,7 @@
     /* Basic Options */
     "target": "es2020",
     "lib": ["es5", "dom"],
+    "typeRoots": ["node_modules/@types"],
 
     /* Module Options */
     "module": "es2015",
