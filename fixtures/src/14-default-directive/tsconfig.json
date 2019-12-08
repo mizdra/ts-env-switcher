@@ -1,0 +1,17 @@
+{
+  "include": ["entrypoint.ts"],
+  "exclude": ["node_modules"],
+  "compilerOptions": {
+    /* Basic Options */
+    "target": "es2020",
+    "lib": ["es5", "dom"],
+
+    /* Module Options */
+    "module": "es2015",
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+
+    /* Strict Type-Checking Options */
+    "strict": true
+  }
+}
