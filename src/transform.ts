@@ -3,6 +3,7 @@ import { join, relative, basename, dirname } from 'path';
 import { isSubDirectory } from './lib/path';
 import ts from 'typescript';
 import { without, uniq } from 'lodash';
+import { includeFileInTypePackage } from './lib/ast';
 
 const DEFAULT_LIB_MAP = (ts as any).libMap as Map<string, string>;
 const DEFAULT_LIB_BASENAMES = [...DEFAULT_LIB_MAP.values()];
@@ -32,6 +33,26 @@ function filterDefaultLibraries(directive: SwitchDirective) {
   };
 }
 
+// `-types` で指定されたプロジェクトの型定義を除外する
+function filterByTypes(srcProject: Project, directive: SwitchDirective) {
+  const typeRoots = ts.getEffectiveTypeRoots(srcProject.config.compilerOptions, {
+    getCurrentDirectory: () => srcProject.basePath,
+  });
+  // `-types` がそもそも設定されていない場合は何も除外しない
+  if (directive['-types'] === undefined) return () => true;
+  // typeRootsが無い場合は型パッケージが一切存在しないので, 何も除外しない
+  if (typeRoots === undefined) return () => true;
+
+  return (sourceFile: ts.SourceFile): boolean => {
+    for (const typePackageName of directive['-types']!) {
+      if (includeFileInTypePackage(typeRoots, typePackageName, sourceFile.fileName)) {
+        return false; // `-types` にあるパッケージの型定義であれば除外
+      }
+    }
+    return true;
+  };
+}
+
 function updateCompilerOptions(oldCompilerOptions: ts.CompilerOptions, directive: SwitchDirective): ts.CompilerOptions {
   let newLib = oldCompilerOptions.lib ?? [];
   if (directive['-lib']) newLib = without(newLib, ...directive['-lib'].map((libName) => `lib.${libName}.d.ts`));
@@ -51,7 +72,8 @@ export function transform(srcProject: Project, directive: SwitchDirective): Proj
   };
   const distSourceFiles = srcProject.sourceFiles
     .map((sourceFile) => ts.getMutableClone(sourceFile))
-    .filter(filterDefaultLibraries(directive));
+    .filter(filterDefaultLibraries(directive))
+    .filter(filterByTypes(srcProject, directive));
 
   return {
     ...srcProject,

@@ -3,6 +3,7 @@ import ts from 'typescript';
 import { format, debug } from './lib/logger';
 import { equalDirective } from './lib/directive';
 import { findSwitchDirectiveRec } from './lib/ast';
+import { relative, join } from 'path';
 
 const formatHost: ts.FormatDiagnosticsHost = {
   getCanonicalFileName: (path) => path,
@@ -39,13 +40,32 @@ function createDirectiveFilter(directive: SwitchDirective) {
 }
 
 export function check(project: Project, directive: SwitchDirective) {
+  const compilerHost: ts.CompilerHost = {
+    ...ts.createCompilerHost(project.config.compilerOptions),
+    getSourceFile: (fileName) => {
+      const normalizedFileName = relative(ts.sys.getCurrentDirectory(), fileName);
+      const hitSourceFile = project.sourceFiles.find((sourceFile) => sourceFile.fileName === normalizedFileName);
+      if (hitSourceFile) return hitSourceFile;
+      return undefined;
+    },
+    fileExists: (fileName) => {
+      const normalizedFileName = relative(ts.sys.getCurrentDirectory(), fileName);
+      return (
+        project.config.fileName === normalizedFileName ||
+        project.packages.some((pkg) => pkg.fileName === normalizedFileName) ||
+        project.sourceFiles.some((sourceFile) => sourceFile.fileName === normalizedFileName)
+      );
+    },
+    getDefaultLibLocation: () => join(project.basePath, 'node_modules/typescript/lib'),
+  };
+
   const program = ts.createProgram(
     project.sourceFiles.map((sourceFile) => sourceFile.fileName),
     {
       ...project.config.compilerOptions,
       noEmit: true,
     },
-    // compilerHost,
+    compilerHost,
   );
   const emitResult = program.emit();
 

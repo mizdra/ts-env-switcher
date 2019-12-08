@@ -1,5 +1,7 @@
 import ts from 'typescript';
 import { SwitchDirective } from '../type';
+import { join } from 'path';
+import { isSubDirectory } from './path';
 
 const DIREVTIVE_HEADER = 'switch:';
 
@@ -37,4 +39,13 @@ export function findSwitchDirectiveRec(sourceFile: ts.SourceFile, node: ts.Node 
   if (!hit) return findSwitchDirectiveRec(sourceFile, node.parent);
 
   return hit;
+}
+
+// あるファイルが typePackage 配下にあるかどうかを返す.
+export function includeFileInTypePackage(typeRoots: string[], typePackageName: string, fileName: string): boolean {
+  for (const typeRoot of typeRoots) {
+    const typePackageDirname = join(typeRoot, typePackageName);
+    if (isSubDirectory(typePackageDirname, fileName)) return true;
+  }
+  return false;
 }

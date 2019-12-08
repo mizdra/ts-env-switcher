@@ -18,4 +18,5 @@ export type Project = Readonly<{
 
 export type SwitchDirective = {
   '-lib'?: string[];
+  '-types'?: string[];
 };
