@@ -14,7 +14,7 @@ if (isNodeJS()) {
   process.pid; // ok
 }
 
-/* switch: { "-types": ["@types/node"] } */
+/* switch: { "-types": ["node"] } */
 if (isBrowser()) {
   Date.now(); // ok
   document.title; // ok
