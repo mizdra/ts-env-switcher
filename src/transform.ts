@@ -1,23 +1,34 @@
 import { Project, SwitchDirective } from './type';
-import { join, relative } from 'path';
+import { join, relative, basename, dirname } from 'path';
 import { isSubDirectory } from './lib/path';
 import ts from 'typescript';
 import { without, uniq } from 'lodash';
 
-const DEFAULT_LIB_REG_EXP = /node_modules\/typescript\/lib\/lib\.(?<libName>\w+)\.d\.ts$/;
+const DEFAULT_LIB_MAP = (ts as any).libMap as Map<string, string>;
+const DEFAULT_LIB_BASENAMES = [...DEFAULT_LIB_MAP.values()];
+const DEFAULT_LIB_DIRNAME = 'node_modules/typescript/lib';
+
+function isDefaultLib(fileName: string): boolean {
+  return DEFAULT_LIB_BASENAMES.includes(basename(fileName)) && dirname(fileName) === DEFAULT_LIB_DIRNAME;
+}
+
+function getDefaultLibName(defaultLibFileName: string): string {
+  const wantedBasename = basename(defaultLibFileName);
+  for (const [defaultLibName, defaultLibBasename] of DEFAULT_LIB_MAP.entries()) {
+    if (wantedBasename === defaultLibBasename) return defaultLibName;
+  }
+  throw new Error(`デフォルトライブラリ ${defaultLibFileName} のファイル名が不正です`);
+}
 
 // `-lib` で指定されたデフォルトライブラリを除外する
 function filterDefaultLibraries(directive: SwitchDirective) {
   return (sourceFile: ts.SourceFile): boolean => {
+    if (!isDefaultLib(sourceFile.fileName)) return true;
+
     // `-lib` がそもそも設定されていない場合は除外するべきファイルも無い
     if (directive['-lib'] === undefined) return true;
 
-    const result = sourceFile.fileName.match(DEFAULT_LIB_REG_EXP);
-    if (result === null) return true;
-    if (result.groups === undefined)
-      throw new Error(`デフォルトライブラリ ${sourceFile.fileName} のファイル名が不正です`);
-
-    return !directive['-lib'].includes(result.groups.libName);
+    return !directive['-lib'].includes(getDefaultLibName(sourceFile.fileName));
   };
 }
 
