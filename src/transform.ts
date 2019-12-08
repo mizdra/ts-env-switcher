@@ -38,6 +38,9 @@ function updateCompilerOptions(oldCompilerOptions: ts.CompilerOptions, directive
   return {
     ...oldCompilerOptions,
     lib: newLib,
+    // `types: []` などに設定されていると `+types` で追加したライブラリがコンパイルに含まれなくなってしまうので,
+    // 全てのTypePackageが読み込まれるよう設定を上書きする
+    types: undefined,
   };
 }
 
