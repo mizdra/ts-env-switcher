@@ -40,6 +40,8 @@ function createDirectiveFilter(directive: SwitchDirective) {
 }
 
 export function check(project: Project, directive: SwitchDirective) {
+  // debug(format(project.sourceFiles.map((sourceFile) => sourceFile.fileName)));
+
   const compilerHost: ts.CompilerHost = {
     ...ts.createCompilerHost(project.config.compilerOptions),
     getSourceFile: (fileName) => {

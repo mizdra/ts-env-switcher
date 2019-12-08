@@ -3,7 +3,7 @@ import { transform } from './transform';
 import { write } from './write';
 import { join, basename } from 'path';
 import { collectDirectives } from './collect';
-import { debug, format } from './lib/logger';
+import { debug, format, info } from './lib/logger';
 import { createDirectiveIdentifier } from './lib/directive';
 import { check } from './check';
 import { getConfigFileName } from './lib/path';
@@ -24,7 +24,8 @@ export function checkEnv(option: Option) {
   const directives = collectDirectives(srcProject);
 
   for (const directive of directives) {
-    debug(format(directive));
+    console.log('-'.repeat(process.stdout.columns));
+    info('Checking for ' + format(directive));
 
     // transform phase
     const distProject = transform(srcProject, directive);
