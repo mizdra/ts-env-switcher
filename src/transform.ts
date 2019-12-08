@@ -10,7 +10,9 @@ const DEFAULT_LIB_BASENAMES = [...DEFAULT_LIB_MAP.values()];
 const DEFAULT_LIB_DIRNAME = 'node_modules/typescript/lib';
 
 function isDefaultLib(fileName: string): boolean {
-  return DEFAULT_LIB_BASENAMES.includes(basename(fileName)) && dirname(fileName) === DEFAULT_LIB_DIRNAME;
+  // TODO: 真面目にやるなら `compilerHost` を project に持たせた上で,
+  // `compilerHost.getDefaultLibLocation` から得られるパスを利用する.
+  return DEFAULT_LIB_BASENAMES.includes(basename(fileName)) && dirname(fileName).endsWith(DEFAULT_LIB_DIRNAME);
 }
 
 function getDefaultLibName(defaultLibFileName: string): string {
