@@ -29,7 +29,7 @@ function filterDuplicate(directives: SwitchDirective[]): SwitchDirective[] {
 }
 
 export function collectDirectives(project: Project): SwitchDirective[] {
-  const directives: SwitchDirective[] = [];
+  const directives: SwitchDirective[] = [{}]; // デフォルトディレクティブもセットしておく
   project.sourceFiles.forEach((sourceFile) => {
     directives.push(...collectDirectivesRec(sourceFile, sourceFile));
   });

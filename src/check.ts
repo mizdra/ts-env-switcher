@@ -33,7 +33,6 @@ function createDirectiveFilter(directive: SwitchDirective) {
     if (!node) return true; // 発生源が不明のエラーは一応残しておく
     if (!diagnostics.file) throw new Error('diagnostics に file フィールドがありません');
     const hitDirective = findSwitchDirectiveRec(diagnostics.file, node);
-    if (!hitDirective) return false; // ディレクティブが無い場所で発生したエラーは無視
     // チェック対象のディレクティブの付いた場所で発生したエラーは残す
     return equalDirective(hitDirective, directive);
   };

@@ -29,12 +29,12 @@ export function getDirective(sourceFile: ts.SourceFile, node: ts.Node): SwitchDi
 
 // node に紐づくディレクティブを返す.
 // ディレクティブが無い場合は親ノードを辿って再帰的に検索する.
-export function findSwitchDirectiveRec(
-  sourceFile: ts.SourceFile,
-  node: ts.Node | undefined,
-): SwitchDirective | undefined {
-  if (!node) return undefined;
+// それでも見つからない場合はデフォルトディレクティブを返す.
+export function findSwitchDirectiveRec(sourceFile: ts.SourceFile, node: ts.Node | undefined): SwitchDirective {
+  if (!node) return {};
+
   const hit = getDirective(sourceFile, node);
   if (!hit) return findSwitchDirectiveRec(sourceFile, node.parent);
+
   return hit;
 }
