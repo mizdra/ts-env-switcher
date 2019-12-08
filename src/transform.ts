@@ -44,23 +44,18 @@ function updateCompilerOptions(oldCompilerOptions: ts.CompilerOptions, directive
   };
 }
 
-export function transform(
-  { basePath: srcBasePath, config: srcConfig, packages: srcPackages, sourceFiles: srcSourceFiles }: Project,
-  directive: SwitchDirective,
-): Project {
+export function transform(srcProject: Project, directive: SwitchDirective): Project {
   const distConfig: Project['config'] = {
-    ...srcConfig,
-    compilerOptions: updateCompilerOptions(srcConfig.compilerOptions, directive),
+    ...srcProject.config,
+    compilerOptions: updateCompilerOptions(srcProject.config.compilerOptions, directive),
   };
-  const distPackages = srcPackages;
-  const distSourceFiles = srcSourceFiles
+  const distSourceFiles = srcProject.sourceFiles
     .map((sourceFile) => ts.getMutableClone(sourceFile))
     .filter(filterDefaultLibraries(directive));
 
   return {
-    basePath: srcBasePath,
+    ...srcProject,
     config: distConfig,
-    packages: distPackages,
     sourceFiles: distSourceFiles,
   };
 }
