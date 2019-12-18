@@ -9,15 +9,16 @@ import { check } from './check';
 import { getConfigFileName } from './lib/path';
 
 type Option = {
-  project: string;
+  project?: string;
   outDir?: string;
 };
 
 export function checkEnv(option: Option) {
-  const configFileName = getConfigFileName(option.project);
+  const projectOption = option.project ?? '.';
+  const configFileName = getConfigFileName(projectOption);
 
   // read phase
-  const srcProject = read(option.project, configFileName);
+  const srcProject = read(projectOption, configFileName);
   debug(format(srcProject.sourceFiles.map((sourceFile) => sourceFile.fileName)));
 
   // collect phase
