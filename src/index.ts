@@ -7,6 +7,13 @@ import { debug, format, info } from './lib/logger';
 import { createDirectiveIdentifier } from './lib/directive';
 import { check } from './check';
 import { getConfigFileName } from './lib/path';
+import ts = require('typescript');
+
+const formatHost: ts.FormatDiagnosticsHost = {
+  getCanonicalFileName: (path) => path,
+  getCurrentDirectory: ts.sys.getCurrentDirectory,
+  getNewLine: () => ts.sys.newLine,
+};
 
 type Option = {
   project?: string;
@@ -24,6 +31,7 @@ export function checkEnv(option: Option) {
   // collect phase
   const directives = collectDirectives(srcProject);
 
+  const diagnostics: ts.Diagnostic[] = [];
   for (const directive of directives) {
     console.log('-'.repeat(process.stdout.columns));
     info('Checking for ' + format(directive));
@@ -37,6 +45,12 @@ export function checkEnv(option: Option) {
       write(distProject, distBasePath);
     }
 
-    check(distProject, directive);
+    diagnostics.push(...check(distProject, directive));
+  }
+
+  // エラーが一件でもある場合はエラーを出力して異常終了する
+  if (diagnostics.length > 0) {
+    console.log(ts.formatDiagnosticsWithColorAndContext(diagnostics, formatHost));
+    process.exit(1);
   }
 }

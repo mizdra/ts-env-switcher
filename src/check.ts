@@ -5,12 +5,6 @@ import { equalDirective } from './lib/directive';
 import { findSwitchDirectiveRec } from './lib/ast';
 import { relative, join } from 'path';
 
-const formatHost: ts.FormatDiagnosticsHost = {
-  getCanonicalFileName: (path) => path,
-  getCurrentDirectory: ts.sys.getCurrentDirectory,
-  getNewLine: () => ts.sys.newLine,
-};
-
 // Diagnostics から Node を取得
 function getNodeFromDiagnostics(diagnostics: ts.Diagnostic): ts.Node | undefined {
   if (diagnostics.start === undefined) return undefined; // 発生位置が無いエラーが存在するらしい
@@ -39,7 +33,7 @@ function createDirectiveFilter(directive: SwitchDirective) {
   };
 }
 
-export function check(project: Project, directive: SwitchDirective) {
+export function check(project: Project, directive: SwitchDirective): ts.Diagnostic[] {
   // debug(format(project.sourceFiles.map((sourceFile) => sourceFile.fileName)));
 
   const compilerHost: ts.CompilerHost = {
@@ -74,5 +68,5 @@ export function check(project: Project, directive: SwitchDirective) {
   const allDiagnostics = ts.getPreEmitDiagnostics(program).concat(emitResult.diagnostics);
   const filteredDiagnostics = allDiagnostics.filter(createDirectiveFilter(directive));
 
-  console.log(ts.formatDiagnosticsWithColorAndContext(filteredDiagnostics, formatHost));
+  return filteredDiagnostics;
 }
