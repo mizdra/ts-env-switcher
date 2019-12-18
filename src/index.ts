@@ -3,7 +3,7 @@ import { transform } from './transform';
 import { write } from './write';
 import { join, basename } from 'path';
 import { collectDirectives } from './collect';
-import { debug, format, info } from './lib/logger';
+import { debug, format, info, setDebugMode } from './lib/logger';
 import { createDirectiveIdentifier } from './lib/directive';
 import { check } from './check';
 import { getConfigFileName } from './lib/path';
@@ -18,11 +18,13 @@ const formatHost: ts.FormatDiagnosticsHost = {
 type Option = {
   project?: string;
   outDir?: string;
+  debug?: boolean;
 };
 
 export function checkEnv(option: Option) {
   const projectOption = option.project ?? '.';
   const configFileName = getConfigFileName(projectOption);
+  setDebugMode(option.debug ?? false);
 
   // read phase
   const srcProject = read(projectOption, configFileName);

@@ -1,6 +1,12 @@
 import chalk from 'chalk';
 import { formatWithOptions } from 'util';
 
+let isDebugMode: boolean = false;
+
+export function setDebugMode(newState: boolean) {
+  isDebugMode = newState;
+}
+
 export function info(message: any) {
   console.log(`${chalk.green('info')}: ${message}`);
 }
@@ -14,7 +20,7 @@ export function error(message: any) {
 }
 
 export function debug(message: any) {
-  console.debug(`${chalk.gray('debug')}: ${message}`);
+  if (isDebugMode) console.debug(`${chalk.gray('debug')}: ${message}`);
 }
 
 export function format(obj: Object): string {
