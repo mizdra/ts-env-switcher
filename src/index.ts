@@ -33,8 +33,7 @@ export function checkEnv(option: Option) {
 
   const diagnostics: ts.Diagnostic[] = [];
   for (const directive of directives) {
-    console.log('-'.repeat(process.stdout.columns));
-    info('Checking for ' + format(directive));
+    debug('Checking for ' + format(directive));
 
     // transform phase
     const distProject = transform(srcProject, directive);
