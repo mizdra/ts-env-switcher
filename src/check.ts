@@ -31,7 +31,7 @@ function getNodeFromDiagnostics(diagnostics: ts.Diagnostic): ts.Node | undefined
 function createDirectiveFilter(directive: SwitchDirective) {
   return (diagnostics: ts.Diagnostic): boolean => {
     const node = getNodeFromDiagnostics(diagnostics);
-    if (!node) return true; // 発生源が不明のエラーは一応残しておく
+    if (!node) return false; // TS2688など, 発生源が不明のエラーはノイズになるので除外する
     if (!diagnostics.file) throw new Error('diagnostics に file フィールドがありません');
     const hitDirective = findSwitchDirectiveRec(diagnostics.file, node);
     // チェック対象のディレクティブの付いた場所で発生したエラーは残す
