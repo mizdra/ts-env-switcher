@@ -1,0 +1,19 @@
+{
+  "name": "example",
+  "version": "1.0.0",
+  "type": "module",
+  "license": "MIT",
+  "scripts": {
+    "start:nodejs": "node dist/index.js",
+    "start:browser": "http-server -o .",
+    "build": "tsc",
+    "typecheck": "check-env"
+  },
+  "dependencies": {
+    "@types/node": "^13.1.8",
+    "typescript": "^3.7.5"
+  },
+  "devDependencies": {
+    "http-server": "^0.12.1"
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "include": ["src/**/*"],
+  "compilerOptions": {
+    "target": "ES2015",
+    "module": "ES2015",
+    "lib": ["dom"],
+    "types": ["node"],
+    "outDir": "dist",
+    "strict": true,
+    "typeRoots": ["node_modules/@types"],
+    "esModuleInterop": true
+  }
+}
