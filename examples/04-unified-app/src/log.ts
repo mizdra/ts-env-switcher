@@ -6,7 +6,7 @@ function isNodeJS() {
   return 'process' in globalThis;
 }
 
-function log(message: string) {
+export function log(message: string) {
   const formattedMessage = Date.now() + ': ' + message;
   /* switch: { "-types": ["node"] } */
   if (isBrowser()) {
@@ -18,5 +18,3 @@ function log(message: string) {
     // process.stdout.write(message);
   }
 }
-
-log('message');

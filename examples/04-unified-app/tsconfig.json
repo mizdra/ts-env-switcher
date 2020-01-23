@@ -3,7 +3,7 @@
   "compilerOptions": {
     "target": "ES2015",
     "module": "ES2015",
-    "lib": ["dom"],
+    "lib": ["ES2015", "dom"],
     "types": ["node"],
     "outDir": "dist",
     "strict": true,
