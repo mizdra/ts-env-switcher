@@ -4,16 +4,16 @@
   "type": "module",
   "license": "MIT",
   "scripts": {
-    "start:node": "node dist/index.js",
-    "start:web": "http-server -o .",
+    "start:nodejs": "node dist/index.js",
+    "start:browser": "http-server -o .",
     "build": "tsc",
     "typecheck": "check-env"
   },
   "dependencies": {
-    "@types/node": "^12.12.20",
-    "typescript": "^3.7.3"
+    "@types/node": "^13.1.8",
+    "typescript": "^3.7.5"
   },
   "devDependencies": {
-    "http-server": "^0.12.0"
+    "http-server": "^0.12.1"
   }
 }
