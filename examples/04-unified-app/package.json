@@ -1,12 +1,10 @@
 {
   "name": "example",
   "version": "1.0.0",
-  "type": "module",
   "license": "MIT",
   "scripts": {
     "start": "node dist/server.js",
-    "build:browser": "parcel build src/index.html --out-dir dist/public",
-    "build:server": "parcel build src/server.html dist",
+    "build": "webpack --config webpack.config.js",
     "typecheck": "check-env"
   },
   "dependencies": {
@@ -15,5 +13,11 @@
     "express": "^4.17.1",
     "typescript": "^3.7.5"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "html-webpack-plugin": "^3.2.0",
+    "ts-loader": "^6.2.1",
+    "webpack": "^4.41.5",
+    "webpack-cli": "^3.3.10",
+    "webpack-node-externals": "^1.7.2"
+  }
 }

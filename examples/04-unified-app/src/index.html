@@ -3,13 +3,14 @@
   <head>
     <meta charset="UTF-8" />
     <title>example</title>
-    <script type="module" src="dist/index.js"></script>
+    <script src="./client.js"></script>
   </head>
   <body>
     <h2>ユーザ登録フォーム</h2>
     <form id="signup">
-      <input type="text" name="username" />
-      <input type="text" name="password" />
+      <div>ユーザ名: <input type="text" name="username" /></div>
+      <div>パスワード: <input type="password" name="password" /></div>
+      <div><input type="submit" value="登録"></div>
     </form>
   </body>
 </html>

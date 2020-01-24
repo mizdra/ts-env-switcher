@@ -2,10 +2,12 @@ import express from 'express';
 import { log } from './log';
 import fs from 'fs';
 
+console.log(__dirname + '/public');
+
 const app = express();
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static('public'));
+app.use(express.static(__dirname + '/public'));
 
 app.post('/signup', (req) => {
   try {
