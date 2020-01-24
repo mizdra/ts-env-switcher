@@ -1,16 +1,18 @@
 import { NextPage } from 'next'
 import Link from 'next/link'
+import nodeFetch from 'node-fetch'
 
 import Layout from '../../components/Layout'
 import List from '../../components/List'
 import { User } from '../../interfaces'
-import { sampleFetchWrapper } from '../../utils/sample-api'
+import { isBrowser } from '../../utils/env'
 
 type Props = {
   items: User[]
   pathname: string
 }
 
+/* switch: { "-lib": ["dom"], "-types": ["node"] } */
 const WithInitialProps: NextPage<Props> = ({ items, pathname }) => (
   <Layout title="Users List | Next.js + TypeScript Example">
     <h1>Users List</h1>
@@ -27,12 +29,21 @@ const WithInitialProps: NextPage<Props> = ({ items, pathname }) => (
   </Layout>
 )
 
+/* switch: { "-lib": ["dom"], "-types": ["node"] } */
 WithInitialProps.getInitialProps = async ({
   pathname,
 }) => {
-  const items: User[] = await sampleFetchWrapper(
-    'http://localhost:3000/api/users'
-  )
+  let items: User[];
+
+  if (isBrowser()) /* switch: { "-types": ["node"] } */ {
+    items = await fetch(
+      'http://localhost:3000/api/users'
+    ).then(res => res.json())
+  } else /* switch: { "-lib": ["dom"] } */ {
+    items = await nodeFetch(
+      'http://localhost:3000/api/users'
+    ).then(res => res.json())
+  }
 
   return { items, pathname }
 }

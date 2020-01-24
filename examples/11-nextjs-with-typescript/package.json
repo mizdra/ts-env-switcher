@@ -8,8 +8,9 @@
     "type-check": "tsc"
   },
   "dependencies": {
-    "isomorphic-unfetch": "3.0.0",
+    "@types/node-fetch": "^2.5.4",
     "next": "latest",
+    "node-fetch": "^2.6.0",
     "react": "^16.10.1",
     "react-dom": "^16.10.1"
   },

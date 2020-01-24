@@ -4,22 +4,32 @@ import { NextPageContext } from 'next'
 import { User } from '../../interfaces'
 import Layout from '../../components/Layout'
 import ListDetail from '../../components/ListDetail'
-import { sampleFetchWrapper } from '../../utils/sample-api'
+import { isBrowser } from '../../utils/env'
 
 type Props = {
   item?: User
   errors?: string
 }
 
+/* switch: { "-lib": ["dom"], "-types": ["node"] } */
 class InitialPropsDetail extends React.Component<Props> {
   static getInitialProps = async ({
     query,
   }: NextPageContext) => {
     try {
       const { id } = query
-      const item = await sampleFetchWrapper(
-        `http://localhost:3000/api/users/${Array.isArray(id) ? id[0] : id}`
-      )
+      let item: any;
+
+      if (isBrowser()) /* switch: { "-types": ["node"] } */ {
+        item = await fetch(
+          `http://localhost:3000/api/users/${Array.isArray(id) ? id[0] : id}`
+        ).then(res => res.json())
+      } else /* switch: { "-lib": ["dom"] } */ {
+        item = await fetch(
+          `http://localhost:3000/api/users/${Array.isArray(id) ? id[0] : id}`
+        ).then(res => res.json())
+      }
+
       return { item }
     } catch (err) {
       return { errors: err.message }
