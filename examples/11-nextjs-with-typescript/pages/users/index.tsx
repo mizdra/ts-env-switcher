@@ -12,7 +12,6 @@ type Props = {
   pathname: string
 }
 
-/* switch: { "-lib": ["dom"], "-types": ["node"] } */
 const WithInitialProps: NextPage<Props> = ({ items, pathname }) => (
   <Layout title="Users List | Next.js + TypeScript Example">
     <h1>Users List</h1>
