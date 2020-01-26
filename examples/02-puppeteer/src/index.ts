@@ -1,12 +1,12 @@
 import puppeteer from 'puppeteer';
 
-(async () => {
+
+(async () => /* switch: { "-lib": ["dom"] } */ {
   const browser = await puppeteer.launch();
   const page = await browser.newPage();
   await page.goto('https://example.com');
-  const title = await page.evaluate(() => {
-    return document.title;
+  await page.evaluate(() => /* switch: { "-types": ["node"] } */ {
+    process.stdout.write(document.title);
   });
-  console.log(title);
   await browser.close();
 })();
