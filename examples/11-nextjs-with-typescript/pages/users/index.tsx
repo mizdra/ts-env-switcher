@@ -1,6 +1,6 @@
 import { NextPage } from 'next'
 import Link from 'next/link'
-import nodeFetch from 'node-fetch'
+// import nodeFetch from 'node-fetch'
 
 import Layout from '../../components/Layout'
 import List from '../../components/List'
