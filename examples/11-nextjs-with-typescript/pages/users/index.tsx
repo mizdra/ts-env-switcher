@@ -39,7 +39,7 @@ WithInitialProps.getInitialProps = async ({
       'http://localhost:3000/api/users'
     ).then(res => res.json())
   } else /* switch: { "-lib": ["dom"] } */ {
-    items = await nodeFetch(
+    items = await fetch(
       'http://localhost:3000/api/users'
     ).then(res => res.json())
   }

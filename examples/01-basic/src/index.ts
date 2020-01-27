@@ -14,7 +14,7 @@ function log(message: string) {
   }
   /* switch: { "-lib": ["dom"] } */
   if (isNodeJS()) {
-    document.write(formattedMessage); // error
+    document.write(formattedMessage);
   }
 }
 

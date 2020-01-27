@@ -1,6 +1,5 @@
 import puppeteer from 'puppeteer';
 
-
 (async () => /* switch: { "-lib": ["dom"] } */ {
   const browser = await puppeteer.launch();
   const page = await browser.newPage();

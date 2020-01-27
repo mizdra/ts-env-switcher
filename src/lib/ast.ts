@@ -9,6 +9,11 @@ export function getDirective(sourceFile: ts.SourceFile, node: ts.Node): SwitchDi
   // SourceFile には `getFullText` が無くて実行時エラーになるので, 明示的に無視する
   if (ts.isSourceFile(node)) return undefined;
 
+  // NOTE: puppeteerを用いたプロジェクトでは何故か kind を持たない RedirectInfo オブジェクトが現れ，実行時エラーを発生させてしまうため，
+  // ここで強引に検知して弾いてる．
+  // ref: https://github.com/microsoft/TypeScript/blob/08e6bc20bb15e5e42d7468fd109bf9542b98cc73/src/compiler/types.ts#L2871
+  if ((node as any).redirectInfo) return undefined;
+
   const nodeFullText = node.getFullText(sourceFile);
   const commentRangesInNode = ts.getLeadingCommentRanges(nodeFullText, 0);
   if (!commentRangesInNode) return undefined;
