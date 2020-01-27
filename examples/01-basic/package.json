@@ -6,8 +6,7 @@
   "scripts": {
     "start:nodejs": "node dist/index.js",
     "start:browser": "http-server -o .",
-    "build": "tsc",
-    "typecheck": "check-env"
+    "build": "tsc"
   },
   "dependencies": {
     "@types/node": "^13.1.8",
