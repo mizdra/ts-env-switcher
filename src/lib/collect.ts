@@ -1,7 +1,7 @@
 import ts from 'typescript';
-import { Project, SwitchDirective } from './type';
-import { equalDirective } from './lib/directive';
-import { getDirective } from './lib/ast';
+import { Project, SwitchDirective } from '../type';
+import { equalDirective } from './directive';
+import { getDirective } from './ast';
 
 function collectDirectivesRec(sourceFile: ts.SourceFile, node: ts.Node): SwitchDirective[] {
   const directives: SwitchDirective[] = [];

@@ -1,11 +1,11 @@
-import { read } from './read';
-import { transform } from './transform';
-import { write } from './write';
+import { read } from './phase/read';
+import { transform } from './phase/transform';
+import { write } from './phase/write';
 import { join, basename } from 'path';
-import { collectDirectives } from './collect';
+import { collectDirectives } from './lib/collect';
 import { debug, format, info, setDebugMode } from './lib/logger';
 import { createDirectiveIdentifier } from './lib/directive';
-import { check } from './check';
+import { check } from './phase/check';
 import { getConfigFileName } from './lib/path';
 import ts = require('typescript');
 

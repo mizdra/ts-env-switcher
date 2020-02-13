@@ -1,7 +1,7 @@
 import ts from 'typescript';
-import { Project } from './type';
+import { Project } from '../type';
 import { basename, join, relative } from 'path';
-import { isSubDirectory } from './lib/path';
+import { isSubDirectory } from '../lib/path';
 
 const parseConfigHost: ts.ParseConfigHost = {
   fileExists: ts.sys.fileExists,

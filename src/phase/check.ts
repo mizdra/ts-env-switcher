@@ -1,8 +1,8 @@
-import { Project, SwitchDirective } from './type';
+import { Project, SwitchDirective } from '../type';
 import ts from 'typescript';
-import { format, debug } from './lib/logger';
-import { equalDirective } from './lib/directive';
-import { findSwitchDirectiveRec } from './lib/ast';
+import { format, debug } from '../lib/logger';
+import { equalDirective } from '../lib/directive';
+import { findSwitchDirectiveRec } from '../lib/ast';
 import { relative, join } from 'path';
 
 // Diagnostics から Node を取得

@@ -1,7 +1,7 @@
 import ts from 'typescript';
-import { Project } from './type';
-import { isSubDirectory } from './lib/path';
-import { warning } from './lib/logger';
+import { Project } from '../type';
+import { isSubDirectory } from '../lib/path';
+import { warning } from '../lib/logger';
 import { relative, join } from 'path';
 
 export function write({ basePath, config, packages, sourceFiles }: Project, distBasePath: string) {

@@ -1,9 +1,9 @@
-import { Project, SwitchDirective } from './type';
+import { Project, SwitchDirective } from '../type';
 import { join, relative, basename, dirname } from 'path';
-import { isSubDirectory } from './lib/path';
+import { isSubDirectory } from '../lib/path';
 import ts from 'typescript';
 import { without, uniq } from 'lodash';
-import { includeFileInTypePackage } from './lib/ast';
+import { includeFileInTypePackage } from '../lib/ast';
 
 const DEFAULT_LIB_MAP = (ts as any).libMap as Map<string, string>;
 const DEFAULT_LIB_BASENAMES = [...DEFAULT_LIB_MAP.values()];
