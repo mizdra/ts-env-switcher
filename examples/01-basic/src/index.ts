@@ -8,12 +8,10 @@ function isNodeJS() {
 
 function log(message: string) {
   const formattedMessage = Date.now() + ': ' + message;
-  /* switch: { "-types": ["node"] } */
-  if (isBrowser()) {
+  if (isBrowser()) /* switch: { "-types": ["node"] } */ {
     document.write(formattedMessage);
   }
-  /* switch: { "-lib": ["dom"] } */
-  if (isNodeJS()) {
+  if (isNodeJS()) /* switch: { "-lib": ["dom"] } */ {
     document.write(formattedMessage);
   }
 }
